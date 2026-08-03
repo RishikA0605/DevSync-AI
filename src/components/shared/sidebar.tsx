@@ -13,7 +13,8 @@ import {
   Bot, 
   Settings,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Sparkles
 } from "lucide-react";
 import { UserButton } from "@/components/shared/user-button";
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,7 @@ import { Button } from "@/components/ui/button";
 const sidebarNav = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { title: "Chat", href: "/chat", icon: MessageSquare },
-  { title: "Tasks", href: "/tasks", icon: CheckSquare },
+  { title: "Projects", href: "/projects", icon: CheckSquare },
   { title: "Notes", href: "/notes", icon: FileText },
   { title: "Files", href: "/files", icon: Files },
   { title: "AI Assistant", href: "/ai", icon: Bot },
@@ -34,57 +35,77 @@ export function Sidebar({ workspaceSlug }: { workspaceSlug: string }) {
   return (
     <div 
       className={cn(
-        "relative flex flex-col border-r border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-black transition-all duration-300",
-        isCollapsed ? "w-16" : "w-64"
+        "relative flex flex-col bg-zinc-950 border-r border-zinc-800/60 transition-all duration-300 ease-in-out",
+        isCollapsed ? "w-[60px]" : "w-[220px]"
       )}
     >
-      <div className="flex h-14 items-center border-b border-zinc-200 dark:border-zinc-800 px-4 py-2">
-        {!isCollapsed && (
-          <div className="flex-1 font-semibold text-lg truncate">
-            {workspaceSlug}
+      {/* Logo / Workspace Header */}
+      <div className="flex h-14 items-center px-3 border-b border-zinc-800/60 shrink-0">
+        <div className={cn("flex items-center gap-2.5 flex-1 min-w-0", isCollapsed && "justify-center")}>
+          <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center shrink-0 shadow-lg">
+            <Sparkles className="h-3.5 w-3.5 text-white" />
           </div>
-        )}
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-8 w-8 ml-auto text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50"
+          {!isCollapsed && (
+            <span className="text-sm font-semibold text-white truncate capitalize">
+              {workspaceSlug}
+            </span>
+          )}
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-7 w-7 shrink-0 text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800"
           onClick={() => setIsCollapsed(!isCollapsed)}
         >
-          {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+          {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
         </Button>
       </div>
 
-      <div className="flex-1 overflow-y-auto py-4">
-        <nav className="space-y-1 px-2">
-          {sidebarNav.map((item) => {
-            const href = `/workspace/${workspaceSlug}${item.href}`;
-            const isActive = pathname.startsWith(href);
-            return (
-              <Link
-                key={item.href}
-                href={href}
-                className={cn(
-                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                  isActive 
-                    ? "bg-primary/10 text-primary" 
-                    : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-50"
-                )}
-                title={isCollapsed ? item.title : undefined}
-              >
-                <item.icon className="h-5 w-5 shrink-0" />
-                {!isCollapsed && <span>{item.title}</span>}
-              </Link>
-            );
-          })}
-        </nav>
+      {/* Navigation */}
+      <div className="flex-1 overflow-y-auto py-3 px-2 space-y-0.5">
+        {sidebarNav.map((item) => {
+          const href = `/workspace/${workspaceSlug}${item.href}`;
+          const isActive = pathname === href || pathname.startsWith(`${href}/`);
+          return (
+            <Link
+              key={item.href}
+              href={href}
+              title={isCollapsed ? item.title : undefined}
+              className={cn(
+                "group flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm font-medium transition-all duration-150",
+                isCollapsed ? "justify-center" : "",
+                isActive
+                  ? "bg-zinc-800 text-white"
+                  : "text-zinc-500 hover:bg-zinc-800/60 hover:text-zinc-200"
+              )}
+            >
+              <item.icon className={cn(
+                "shrink-0 transition-colors",
+                isCollapsed ? "h-5 w-5" : "h-4 w-4",
+                isActive ? "text-violet-400" : "text-zinc-500 group-hover:text-zinc-300"
+              )} />
+              {!isCollapsed && <span>{item.title}</span>}
+              {!isCollapsed && isActive && (
+                <div className="ml-auto h-1.5 w-1.5 rounded-full bg-violet-400" />
+              )}
+            </Link>
+          );
+        })}
       </div>
 
-      <div className="p-4 border-t border-zinc-200 dark:border-zinc-800">
-        <div className={cn("flex items-center", isCollapsed ? "justify-center" : "gap-3")}>
+      {/* Bottom: User + Settings */}
+      <div className="p-2 border-t border-zinc-800/60 shrink-0">
+        <div className={cn("flex items-center gap-2", isCollapsed ? "justify-center" : "")}>
           <UserButton />
           {!isCollapsed && (
-            <Link href={`/workspace/${workspaceSlug}/settings`} className="text-zinc-500 hover:text-zinc-900 ml-auto">
-              <Settings size={18} />
+            <div className="flex-1 min-w-0" />
+          )}
+          {!isCollapsed && (
+            <Link
+              href={`/workspace/${workspaceSlug}/settings`}
+              className="p-1.5 rounded-lg text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800 transition-colors"
+            >
+              <Settings size={15} />
             </Link>
           )}
         </div>
