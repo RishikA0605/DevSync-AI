@@ -1,7 +1,7 @@
 export default async function WorkspaceDashboardPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
   const resolvedParams = await params;
   
