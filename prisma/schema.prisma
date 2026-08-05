@@ -30,6 +30,7 @@ model User {
   notifications   Notification[]
   activityLogs    ActivityLog[]
   aiConversations AIConversation[]
+  channelReads    ChannelRead[]
 }
 
 model Account {
@@ -112,6 +113,7 @@ model Channel {
   workspace   Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   
   messages    Message[]
+  channelReads ChannelRead[]
 }
 
 enum ChannelType {
@@ -131,6 +133,26 @@ model Message {
   
   channelId   String
   channel     Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  isEdited    Boolean  @default(false)
+
+  @@index([channelId])
+  @@index([senderId])
+}
+
+model ChannelRead {
+  id          String   @id @default(cuid())
+  lastReadAt  DateTime @default(now())
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  channelId   String
+  channel     Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, channelId])
+  @@index([userId])
+  @@index([channelId])
 }
 
 // ---------------------------------------------------------

@@ -1,10 +1,14 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { saveMessage } from "@/features/ai/actions/ai.actions";
+import { streamText } from "ai";
+import { createGroq } from "@ai-sdk/groq";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+// Initialize Groq provider
+const groq = createGroq({
+  apiKey: process.env.GROQ_API_KEY,
+});
 
 export async function POST(req: NextRequest) {
   try {
@@ -62,59 +66,54 @@ You can help with:
 
 Be concise, professional, and helpful. Use markdown formatting for code and lists. Always speak as if you are embedded in this workspace.`;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
-    // Build chat history from all previous messages (excluding the last user message)
-    const history = messages.slice(0, -1).map((m: { role: string; content: string }) => ({
-      role: m.role === "assistant" ? "model" : "user",
-      parts: [{ text: m.content }],
-    }));
-
-    const chat = model.startChat({
-      history: [
-        { role: "user", parts: [{ text: systemPrompt }] },
-        { role: "model", parts: [{ text: "Understood! I'm ready to assist the team." }] },
-        ...history,
-      ],
-    });
-
     const lastUserMessage = messages[messages.length - 1].content;
 
-    // Stream the response
-    const result = await chat.sendMessageStream(lastUserMessage);
-
-    const encoder = new TextEncoder();
-    const stream = new ReadableStream({
-      async start(controller) {
-        let fullText = "";
-        for await (const chunk of result.stream) {
-          const text = chunk.text();
-          fullText += text;
-          // Vercel AI SDK data stream format
-          controller.enqueue(encoder.encode(`0:${JSON.stringify(text)}\n`));
-        }
-        controller.enqueue(encoder.encode(`d:{"finishReason":"stop"}\n`));
-        controller.close();
-
-        // Save messages to DB
+    // Use Vercel AI SDK's streamText with the Groq provider
+    const result = streamText({
+      // We use llama-3.3-70b-versatile, one of Groq's best and fastest models
+      model: groq("llama-3.3-70b-versatile"), 
+      system: systemPrompt,
+      messages: messages.map((m: any) => ({
+        role: m.role === "assistant" ? "assistant" : "user",
+        content: m.content,
+      })),
+      async onFinish({ text }) {
+        // Save messages to DB after streaming completes
         if (conversationId) {
           try {
             await saveMessage(conversationId, "user", lastUserMessage);
-            await saveMessage(conversationId, "assistant", fullText);
+            await saveMessage(conversationId, "assistant", text);
           } catch (e) {
             console.error("Failed to save AI messages to DB:", e);
           }
         }
-      },
+      }
+    });
+
+    // Manually create the stream to avoid SDK version mismatches with response helpers
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const chunk of result.textStream) {
+            controller.enqueue(encoder.encode(`0:${JSON.stringify(chunk)}\n`));
+          }
+          controller.enqueue(encoder.encode(`d:{"finishReason":"stop"}\n`));
+        } catch (e) {
+          console.error("Streaming error", e);
+        } finally {
+          controller.close();
+        }
+      }
     });
 
     return new Response(stream, {
       headers: {
         "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
         "X-Vercel-AI-Data-Stream": "v1",
       },
     });
+
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     const status = (error as { status?: number })?.status;
