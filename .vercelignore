@@ -1,0 +1,2 @@
+# Don't include the standalone Socket.io server in Vercel builds
+server/
