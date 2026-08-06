@@ -93,8 +93,31 @@ export function Sidebar({ workspaceSlug }: { workspaceSlug: string }) {
         })}
       </div>
 
-      {/* Bottom: User + Settings */}
-      <div className="p-2 border-t border-zinc-800/60 shrink-0">
+      {/* Bottom: User + Settings + Invite */}
+      <div className="p-2 border-t border-zinc-800/60 shrink-0 space-y-2">
+        <Button
+          variant="outline"
+          size="sm"
+          className={cn(
+            "w-full flex items-center justify-center gap-2 border-dashed border-zinc-700 bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all",
+            isCollapsed ? "px-0" : "px-3"
+          )}
+          onClick={async () => {
+            try {
+              const { generateInviteToken } = await import("@/features/workspace/actions/invite.actions");
+              const token = await generateInviteToken(workspaceSlug);
+              const inviteLink = `${window.location.origin}/invite?token=${token}`;
+              await navigator.clipboard.writeText(inviteLink);
+              alert("Invite link copied to clipboard!");
+            } catch (error) {
+              console.error(error);
+              alert("Failed to generate invite link");
+            }
+          }}
+        >
+          <Sparkles className="h-4 w-4 shrink-0 text-violet-400" />
+          {!isCollapsed && <span>Invite Members</span>}
+        </Button>
         <div className={cn("flex items-center gap-2", isCollapsed ? "justify-center" : "")}>
           <UserButton />
           {!isCollapsed && (
