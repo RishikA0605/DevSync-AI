@@ -5,14 +5,17 @@ import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export const SocialLogin = () => {
   const [isLoading, setIsLoading] = useState<"google" | "github" | null>(null);
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
 
   const onClick = (provider: "google" | "github") => {
     setIsLoading(provider);
     signIn(provider, {
-      callbackUrl: "/dashboard",
+      callbackUrl,
     });
   };
 
@@ -42,3 +45,4 @@ export const SocialLogin = () => {
     </div>
   );
 };
+
