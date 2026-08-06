@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { SocialLogin } from "./social-login";
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 
 interface AuthCardProps {
   title: string;
@@ -32,7 +32,9 @@ export const AuthCard = ({ title, description, footer }: AuthCardProps) => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <SocialLogin />
+        <Suspense fallback={<div className="h-[104px] w-full animate-pulse bg-zinc-800 rounded-lg"></div>}>
+          <SocialLogin />
+        </Suspense>
       </CardContent>
       {footer && (
         <CardFooter className="flex flex-col items-center justify-center gap-2 text-sm text-muted-foreground">
