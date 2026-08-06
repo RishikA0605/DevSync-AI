@@ -42,5 +42,5 @@ export default async function InvitePage({
   }
 
   // Redirect outside the try-catch block because Next.js redirect() throws an error internally
-  redirect(`/workspace/${workspaceSlug}`);
+  redirect(`/workspace/${workspaceSlug}/chat`);
 }
