@@ -27,10 +27,9 @@ export default async function InvitePage({
     redirect(`/api/auth/signin?callbackUrl=${encodeURIComponent(`/invite?token=${token}`)}`);
   }
 
+  let workspaceSlug: string;
   try {
-    const workspaceSlug = await joinWorkspace(token);
-    // Successfully joined, redirect to the workspace
-    redirect(`/workspace/${workspaceSlug}`);
+    workspaceSlug = await joinWorkspace(token);
   } catch (error: any) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
@@ -41,4 +40,7 @@ export default async function InvitePage({
       </div>
     );
   }
+
+  // Redirect outside the try-catch block because Next.js redirect() throws an error internally
+  redirect(`/workspace/${workspaceSlug}`);
 }
