@@ -136,6 +136,8 @@ model Message {
 
   isEdited    Boolean  @default(false)
 
+  files       File[]
+
   @@index([channelId])
   @@index([senderId])
 }
@@ -188,6 +190,7 @@ model Task {
   assignee    User?        @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
 
   comments    TaskComment[]
+  files       File[]
 }
 
 model TaskComment {
@@ -237,6 +240,7 @@ model File {
   id          String   @id @default(cuid())
   name        String
   url         String
+  publicId    String?  // Cloudinary public ID for deletion
   type        String
   size        Int
   createdAt   DateTime @default(now())
@@ -246,6 +250,12 @@ model File {
   
   uploaderId  String
   uploader    User      @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+
+  taskId      String?
+  task        Task?     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  messageId   String?
+  message     Message?  @relation(fields: [messageId], references: [id], onDelete: Cascade)
 }
 
 // ---------------------------------------------------------
