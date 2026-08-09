@@ -14,10 +14,12 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  Activity
 } from "lucide-react";
 import { UserButton } from "@/components/shared/user-button";
 import { Button } from "@/components/ui/button";
+import { NotificationBell } from "@/features/notifications/components/notification-bell";
 
 const sidebarNav = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -25,6 +27,7 @@ const sidebarNav = [
   { title: "Projects", href: "/projects", icon: CheckSquare },
   { title: "Notes", href: "/notes", icon: FileText },
   { title: "Files", href: "/files", icon: Files },
+  { title: "Activity", href: "/activity", icon: Activity },
   { title: "AI Assistant", href: "/ai", icon: Bot },
 ];
 
@@ -124,12 +127,15 @@ export function Sidebar({ workspaceSlug }: { workspaceSlug: string }) {
             <div className="flex-1 min-w-0" />
           )}
           {!isCollapsed && (
-            <Link
-              href={`/workspace/${workspaceSlug}/settings`}
-              className="p-1.5 rounded-lg text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800 transition-colors"
-            >
-              <Settings size={15} />
-            </Link>
+            <div className="flex items-center gap-1">
+              <NotificationBell />
+              <Link
+                href={`/workspace/${workspaceSlug}/settings`}
+                className="p-1.5 rounded-lg text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800 transition-colors"
+              >
+                <Settings size={15} />
+              </Link>
+            </div>
           )}
         </div>
       </div>

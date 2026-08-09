@@ -12,7 +12,11 @@ dotenv.config();
 const PORT = process.env.PORT || 3001;
 const FRONTEND_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
+// Shared secret so only our Next.js server can call this endpoint
+const INTERNAL_SECRET = process.env.INTERNAL_SOCKET_SECRET || "devsync-internal-secret";
+
 const app = express();
+app.use(express.json());
 
 // Health check endpoint (for Railway deployment)
 app.get("/health", (_req, res) => {
@@ -52,6 +56,31 @@ async function startServer() {
     } else {
       console.log("ℹ️ Running in memory-only mode (No Redis Adapter)");
     }
+
+    // ── Internal REST: emit notification to a specific user ───────────────────
+    app.post("/emit-notification", (req, res) => {
+      const secret = req.headers["x-internal-secret"];
+      if (secret !== INTERNAL_SECRET) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+      }
+
+      const { userId, event, payload } = req.body as {
+        userId: string;
+        event: string;
+        payload: unknown;
+      };
+
+      if (!userId || !event || !payload) {
+        res.status(400).json({ error: "Missing userId, event, or payload" });
+        return;
+      }
+
+      // Emit to the user's personal room
+      io.to(`user:${userId}`).emit(event, payload);
+      console.log(`[WS] Emitted ${event} to user:${userId}`);
+      res.json({ success: true });
+    });
 
     // ── Authentication middleware ───────────────────────────────────────────────
     io.use((socket, next) =>

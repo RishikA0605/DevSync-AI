@@ -27,7 +27,8 @@ model User {
   taskComments    TaskComment[]
   notes           Note[]
   files           File[]
-  notifications   Notification[]
+  notifications   Notification[]    @relation("NotificationRecipient")
+  notificationsTriggered Notification[] @relation("NotificationActor")
   activityLogs    ActivityLog[]
   aiConversations AIConversation[]
   channelReads    ChannelRead[]
@@ -262,19 +263,30 @@ model File {
 // Notifications & Activity
 // ---------------------------------------------------------
 model Notification {
-  id          String   @id @default(cuid())
+  id          String           @id @default(cuid())
   content     String
   type        NotificationType
-  isRead      Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  isRead      Boolean          @default(false)
+  link        String?          // Deep-link to the related entity
+  createdAt   DateTime         @default(now())
 
+  // Recipient
   userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User             @relation("NotificationRecipient", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Actor (who triggered the notification)
+  actorId     String?
+  actor       User?            @relation("NotificationActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([userId, isRead])
+  @@index([userId, createdAt(sort: Desc)])
 }
 
 enum NotificationType {
   MENTION
   TASK_ASSIGNED
+  TASK_STATUS_CHANGED
+  WORKSPACE_JOINED
   SYSTEM
 }
 
@@ -291,6 +303,9 @@ model ActivityLog {
 
   workspaceId String
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, createdAt(sort: Desc)])
+  @@index([userId])
 }
 
 // ---------------------------------------------------------

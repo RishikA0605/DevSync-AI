@@ -3,6 +3,8 @@
 import jwt from "jsonwebtoken";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { logActivity } from "@/features/activity/actions/activity.actions";
+import { createNotification } from "@/features/notifications/actions/notification.actions";
 
 export async function generateInviteToken(workspaceSlug: string) {
   const session = await auth();
@@ -49,6 +51,31 @@ export async function joinWorkspace(token: string) {
         role: "MEMBER",
       },
     });
+
+    // Log activity and notify owner
+    await logActivity({
+      userId: session.user.id,
+      workspaceId: workspace.id,
+      action: "joined_workspace",
+      entityType: "Workspace",
+      entityId: workspace.id,
+      details: `Joined workspace "${workspace.name}"`,
+    });
+
+    // Notify workspace owner (unless they are the one joining)
+    if (workspace.ownerId !== session.user.id) {
+      const joiner = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { name: true },
+      });
+      await createNotification({
+        userId: workspace.ownerId,
+        actorId: session.user.id,
+        type: "WORKSPACE_JOINED",
+        content: `${joiner?.name || "Someone"} joined your workspace "${workspace.name}"`,
+        link: `/workspace/${workspaceSlug}/settings`,
+      });
+    }
 
     return workspaceSlug;
   } catch (error) {

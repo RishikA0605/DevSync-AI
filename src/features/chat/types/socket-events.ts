@@ -23,6 +23,14 @@ export const SOCKET_EVENTS = {
   CHANNEL_CREATED: "CHANNEL_CREATED",
   JOIN_CHANNEL: "JOIN_CHANNEL",
   LEAVE_CHANNEL: "LEAVE_CHANNEL",
+
+  // Notification events
+  NOTIFICATION_NEW: "NOTIFICATION_NEW",
+  NOTIFICATION_READ: "NOTIFICATION_READ",
+  NOTIFICATION_READ_ALL: "NOTIFICATION_READ_ALL",
+
+  // Activity events
+  ACTIVITY_NEW: "ACTIVITY_NEW",
 } as const;
 
 // Derive the union type from the constants
@@ -62,4 +70,34 @@ export interface ChannelCreatedPayload {
   name: string;
   type: "PUBLIC" | "PRIVATE" | "DIRECT";
   workspaceId: string;
+}
+
+export interface NotificationPayload {
+  id: string;
+  content: string;
+  type: string;
+  isRead: boolean;
+  link: string | null;
+  createdAt: string;
+  actorId: string | null;
+  actor: {
+    id: string;
+    name: string | null;
+    image: string | null;
+  } | null;
+}
+
+export interface ActivityPayload {
+  id: string;
+  action: string;
+  entityType: string;
+  entityId: string;
+  details: string | null;
+  createdAt: string;
+  workspaceId: string;
+  user: {
+    id: string;
+    name: string | null;
+    image: string | null;
+  };
 }

@@ -4,6 +4,8 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { createTaskSchema, updateTaskSchema, CreateTaskValues, UpdateTaskValues } from "@/validations/task.schema";
+import { createNotification } from "@/features/notifications/actions/notification.actions";
+import { logActivity } from "@/features/activity/actions/activity.actions";
 
 export async function createTask(projectId: string, data: CreateTaskValues) {
   const session = await auth();
@@ -31,6 +33,36 @@ export async function createTask(projectId: string, data: CreateTaskValues) {
   });
 
   revalidatePath(`/workspace`);
+
+  // Get project for workspace context
+  const project = await prisma.project.findUnique({
+    where: { id: projectId },
+    include: { workspace: true },
+  });
+
+  if (project) {
+    // Log activity
+    await logActivity({
+      userId: session.user.id,
+      workspaceId: project.workspaceId,
+      action: "created_task",
+      entityType: "Task",
+      entityId: task.id,
+      details: `Created task "${task.title}"`,
+    });
+
+    // Notify assignee if different from creator
+    if (task.assigneeId && task.assigneeId !== session.user.id) {
+      await createNotification({
+        userId: task.assigneeId,
+        actorId: session.user.id,
+        type: "TASK_ASSIGNED",
+        content: `${session.user.name || "Someone"} assigned you a task: "${task.title}"`,
+        link: `/workspace/${project.workspace.slug}/projects/${projectId}`,
+      });
+    }
+  }
+
   return task;
 }
 
@@ -67,6 +99,35 @@ export async function updateTaskStatus(taskId: string, status: string) {
     },
   });
   revalidatePath(`/workspace`);
+
+  // Log status change activity
+  const project = await prisma.project.findUnique({
+    where: { id: task.projectId },
+    include: { workspace: true },
+  });
+
+  if (project) {
+    await logActivity({
+      userId: session.user.id,
+      workspaceId: project.workspaceId,
+      action: "updated_task_status",
+      entityType: "Task",
+      entityId: task.id,
+      details: `Moved "${task.title}" to ${status.replace(/_/g, " ").toLowerCase()}`,
+    });
+
+    // Notify assignee about status change
+    if (task.assigneeId && task.assigneeId !== session.user.id) {
+      await createNotification({
+        userId: task.assigneeId,
+        actorId: session.user.id,
+        type: "TASK_STATUS_CHANGED",
+        content: `Task "${task.title}" was moved to ${status.replace(/_/g, " ").toLowerCase()}`,
+        link: `/workspace/${project.workspace.slug}/projects/${task.projectId}`,
+      });
+    }
+  }
+
   return task;
 }
 

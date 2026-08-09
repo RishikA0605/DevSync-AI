@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { fileSchema, FileSchemaValues } from "@/validations/file.schema";
 import { v2 as cloudinary } from "cloudinary";
+import { logActivity } from "@/features/activity/actions/activity.actions";
 
 // Configure cloudinary with environment variables if they exist
 if (process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME) {
@@ -63,6 +64,18 @@ export async function saveFileRecord(data: FileSchemaValues) {
         revalidatePath(`/workspace/${workspace.slug}/projects/${task.projectId}`);
       }
     }
+  }
+
+  // Log activity (no notifications for file uploads to avoid spam)
+  if (workspace) {
+    await logActivity({
+      userId: session.user.id,
+      workspaceId: parsed.workspaceId,
+      action: "uploaded_file",
+      entityType: "File",
+      entityId: file.id,
+      details: `Uploaded "${file.name}"`,
+    });
   }
 
   return file;
