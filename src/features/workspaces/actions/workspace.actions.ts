@@ -32,22 +32,27 @@ export async function createWorkspace(data: CreateWorkspaceValues) {
     counter++;
   }
 
-  const workspace = await prisma.workspace.create({
-    data: {
-      name: parsed.name,
-      slug,
-      ownerId: session.user.id,
-      members: {
-        create: {
-          userId: session.user.id,
-          role: "OWNER",
+  try {
+    const workspace = await prisma.workspace.create({
+      data: {
+        name: parsed.name,
+        slug,
+        ownerId: session.user.id,
+        members: {
+          create: {
+            userId: session.user.id,
+            role: "OWNER",
+          },
         },
       },
-    },
-  });
+    });
 
-  revalidatePath("/dashboard");
-  return workspace;
+    revalidatePath("/dashboard");
+    return { success: true, workspace };
+  } catch (error: any) {
+    console.error("Create Workspace Error:", error);
+    return { success: false, error: error.message || "Failed to create workspace in database." };
+  }
 }
 
 export async function getUserWorkspaces() {
