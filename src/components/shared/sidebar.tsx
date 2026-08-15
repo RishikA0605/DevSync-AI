@@ -20,6 +20,8 @@ import {
 import { UserButton } from "@/components/shared/user-button";
 import { Button } from "@/components/ui/button";
 import { NotificationBell } from "@/features/notifications/components/notification-bell";
+import { WorkspaceSwitcher } from "@/features/workspaces/components/workspace-switcher";
+import { Workspace } from "@prisma/client";
 
 const sidebarNav = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -31,7 +33,7 @@ const sidebarNav = [
   { title: "AI Assistant", href: "/ai", icon: Bot },
 ];
 
-export function Sidebar({ workspaceSlug }: { workspaceSlug: string }) {
+export function Sidebar({ workspaceSlug, workspaces }: { workspaceSlug: string, workspaces: Workspace[] }) {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -43,17 +45,9 @@ export function Sidebar({ workspaceSlug }: { workspaceSlug: string }) {
       )}
     >
       {/* Logo / Workspace Header */}
-      <div className="flex h-14 items-center px-3 border-b border-zinc-800/60 shrink-0">
-        <div className={cn("flex items-center gap-2.5 flex-1 min-w-0", isCollapsed && "justify-center")}>
-          <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center shrink-0 shadow-lg">
-            <Sparkles className="h-3.5 w-3.5 text-white" />
-          </div>
-          {!isCollapsed && (
-            <span className="text-sm font-semibold text-white truncate capitalize">
-              {workspaceSlug}
-            </span>
-          )}
-        </div>
+      <div className="flex h-14 items-center px-2 border-b border-zinc-800/60 shrink-0">
+        <WorkspaceSwitcher workspaces={workspaces} activeSlug={workspaceSlug} isCollapsed={isCollapsed} />
+        
         <Button
           variant="ghost"
           size="icon"

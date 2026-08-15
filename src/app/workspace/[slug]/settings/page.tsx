@@ -1,64 +1,96 @@
-"use client";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { SettingsTabs } from "@/features/workspaces/components/settings/settings-tabs";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trash2, AlertTriangle } from "lucide-react";
-import { signOut } from "next-auth/react";
-import { deleteAccount } from "@/features/auth/actions/auth.actions";
+export default async function SettingsPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const session = await auth();
+  if (!session?.user?.id) redirect("/auth");
 
-export default function SettingsPage() {
-  const [isDeleting, setIsDeleting] = useState(false);
+  const { slug } = await params;
 
-  const handleDeleteAccount = async () => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete your account? This action cannot be undone and will permanently delete all your data, including workspaces you own."
-    );
+  // Fetch workspace and current member
+  const workspace = await prisma.workspace.findUnique({
+    where: { slug },
+  });
 
-    if (!confirmDelete) return;
+  if (!workspace) redirect("/dashboard");
 
-    try {
-      setIsDeleting(true);
-      await deleteAccount();
-      // Sign out and redirect to home/auth
-      await signOut({ callbackUrl: "/auth" });
-    } catch (error) {
-      console.error(error);
-      alert("Failed to delete account. Please try again.");
-      setIsDeleting(false);
-    }
-  };
+  const currentMember = await prisma.workspaceMember.findUnique({
+    where: {
+      userId_workspaceId: {
+        userId: session.user.id,
+        workspaceId: workspace.id,
+      },
+    },
+  });
+
+  if (!currentMember) redirect("/dashboard");
+
+  const isAdmin = currentMember.role === "OWNER" || currentMember.role === "ADMIN";
+
+  // Fetch all members
+  const members = await prisma.workspaceMember.findMany({
+    where: { workspaceId: workspace.id },
+    include: {
+      user: {
+        select: { id: true, name: true, email: true, image: true },
+      },
+    },
+    orderBy: [
+      { role: "asc" },
+      { createdAt: "asc" }
+    ],
+  });
+
+  // Fetch invites (if admin)
+  let invites: any[] = [];
+  if (isAdmin) {
+    invites = await prisma.workspaceInvite.findMany({
+      where: { 
+        workspaceId: workspace.id,
+        isRevoked: false,
+        OR: [
+          { expiresAt: null },
+          { expiresAt: { gt: new Date() } }
+        ]
+      },
+      include: {
+        createdBy: { select: { id: true, name: true, email: true, image: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+  }
+
+  // Fetch stats
+  const [memberCount, projectCount, taskCount, fileCount] = await Promise.all([
+    prisma.workspaceMember.count({ where: { workspaceId: workspace.id } }),
+    prisma.project.count({ where: { workspaceId: workspace.id } }),
+    prisma.task.count({ where: { project: { workspaceId: workspace.id } } }),
+    prisma.file.count({ where: { workspaceId: workspace.id } }),
+  ]);
+
+  const workspaceStats = { memberCount, projectCount, taskCount, fileCount };
 
   return (
     <div className="flex-1 p-8">
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="max-w-6xl mx-auto space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Settings</h1>
-          <p className="text-zinc-400 mt-1">Manage your account preferences and data.</p>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Workspace Settings</h1>
+          <p className="text-zinc-400 mt-1">Manage your workspace preferences, members, and data.</p>
         </div>
 
-        <Card className="border-red-900/50 bg-red-950/10">
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-red-500" />
-              <CardTitle className="text-red-500">Danger Zone</CardTitle>
-            </div>
-            <CardDescription className="text-zinc-400">
-              Permanently remove your account and all of its contents from the DevSync AI platform. This action is not reversible.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button
-              variant="destructive"
-              onClick={handleDeleteAccount}
-              disabled={isDeleting}
-              className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-medium"
-            >
-              <Trash2 className="h-4 w-4" />
-              {isDeleting ? "Deleting Account..." : "Delete My Account"}
-            </Button>
-          </CardContent>
-        </Card>
+        <SettingsTabs 
+          workspace={workspace} 
+          currentMember={currentMember} 
+          members={members} 
+          invites={invites}
+          workspaceStats={workspaceStats}
+        />
       </div>
     </div>
   );

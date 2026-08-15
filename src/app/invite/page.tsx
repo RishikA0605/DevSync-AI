@@ -1,4 +1,4 @@
-import { joinWorkspace } from "@/features/workspace/actions/invite.actions";
+import { joinWorkspaceByToken } from "@/features/workspaces/actions/workspace-invite.actions";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
@@ -29,7 +29,7 @@ export default async function InvitePage({
 
   let workspaceSlug: string;
   try {
-    workspaceSlug = await joinWorkspace(token);
+    workspaceSlug = await joinWorkspaceByToken(token);
   } catch (error: any) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
