@@ -30,6 +30,7 @@ export default async function SettingsPage({
   });
 
   if (!currentMember) redirect("/dashboard");
+  if (currentMember.role === "GUEST") redirect(`/workspace/${workspace.slug}/dashboard`);
 
   const isAdmin = currentMember.role === "OWNER" || currentMember.role === "ADMIN";
 

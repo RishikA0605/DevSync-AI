@@ -7,6 +7,8 @@ import { revalidatePath } from "next/cache";
 import { logActivity } from "@/features/activity/actions/activity.actions";
 import { createNotification } from "@/features/notifications/actions/notification.actions";
 import { WorkspaceRole } from "@prisma/client";
+import { hasPermission } from "@/features/permissions/utils/has-permission";
+import { Permission } from "@/features/permissions/types";
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -23,17 +25,18 @@ async function getWorkspaceAndMember(workspaceId: string) {
   return { session, member, workspace: member.workspace };
 }
 
-function checkAdminRole(role: WorkspaceRole) {
-  if (role !== "OWNER" && role !== "ADMIN") {
-    throw new Error("Requires ADMIN or OWNER role");
+async function verifyWorkspacePermission(workspaceId: string, permission: Permission) {
+  const data = await getWorkspaceAndMember(workspaceId);
+  if (!hasPermission(data.member.role, permission)) {
+    throw new Error("Unauthorized: Insufficient permissions");
   }
+  return data;
 }
 
 // ── Invite Actions ─────────────────────────────────────────────────────────
 
 export async function createInvite(workspaceId: string, expiresInDays: number | null) {
-  const { member, workspace, session } = await getWorkspaceAndMember(workspaceId);
-  checkAdminRole(member.role);
+  const { member, workspace, session } = await verifyWorkspacePermission(workspaceId, "invite:manage");
 
   // Generate a random secure token
   const token = crypto.randomBytes(32).toString("hex");
@@ -59,8 +62,7 @@ export async function createInvite(workspaceId: string, expiresInDays: number | 
 }
 
 export async function getWorkspaceInvites(workspaceId: string) {
-  const { member } = await getWorkspaceAndMember(workspaceId);
-  checkAdminRole(member.role);
+  const { member } = await verifyWorkspacePermission(workspaceId, "invite:manage");
 
   return await prisma.workspaceInvite.findMany({
     where: { 
@@ -79,8 +81,7 @@ export async function getWorkspaceInvites(workspaceId: string) {
 }
 
 export async function revokeInvite(inviteId: string, workspaceId: string) {
-  const { member, workspace } = await getWorkspaceAndMember(workspaceId);
-  checkAdminRole(member.role);
+  const { member, workspace } = await verifyWorkspacePermission(workspaceId, "invite:manage");
 
   const invite = await prisma.workspaceInvite.findUnique({
     where: { id: inviteId },

@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { v2 as cloudinary } from "cloudinary";
+import { hasPermission } from "@/features/permissions/utils/has-permission";
+import { Permission } from "@/features/permissions/types";
 
 if (process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME) {
   cloudinary.config({
@@ -28,16 +30,12 @@ async function getWorkspaceAndMember(workspaceId: string) {
   return { session, member, workspace: member.workspace };
 }
 
-function checkAdminRole(role: string) {
-  if (role !== "OWNER" && role !== "ADMIN") {
-    throw new Error("Requires ADMIN or OWNER role");
+async function verifyWorkspacePermission(workspaceId: string, permission: Permission) {
+  const data = await getWorkspaceAndMember(workspaceId);
+  if (!hasPermission(data.member.role, permission)) {
+    throw new Error("Unauthorized: Insufficient permissions");
   }
-}
-
-function checkOwnerRole(role: string) {
-  if (role !== "OWNER") {
-    throw new Error("Requires OWNER role");
-  }
+  return data;
 }
 
 function slugify(text: string) {
@@ -53,8 +51,7 @@ function slugify(text: string) {
 // ── Workspace Settings ─────────────────────────────────────────────────────
 
 export async function updateWorkspaceName(workspaceId: string, name: string) {
-  const { member, workspace } = await getWorkspaceAndMember(workspaceId);
-  checkAdminRole(member.role);
+  const { member, workspace } = await verifyWorkspacePermission(workspaceId, "workspace:update");
 
   if (name.trim().length < 2) throw new Error("Name must be at least 2 characters");
 
@@ -69,8 +66,7 @@ export async function updateWorkspaceName(workspaceId: string, name: string) {
 }
 
 export async function updateWorkspaceSlug(workspaceId: string, newSlugInput: string) {
-  const { member, workspace } = await getWorkspaceAndMember(workspaceId);
-  checkOwnerRole(member.role);
+  const { member, workspace } = await verifyWorkspacePermission(workspaceId, "workspace:update");
 
   const newSlug = slugify(newSlugInput);
   if (newSlug.length < 2) throw new Error("Slug must be at least 2 characters");
@@ -91,8 +87,7 @@ export async function updateWorkspaceSlug(workspaceId: string, newSlugInput: str
 }
 
 export async function updateWorkspaceLogo(workspaceId: string, logoUrl: string | null, logoPublicId: string | null) {
-  const { member, workspace } = await getWorkspaceAndMember(workspaceId);
-  checkAdminRole(member.role);
+  const { member, workspace } = await verifyWorkspacePermission(workspaceId, "workspace:update");
 
   // If replacing an existing logo, clean up from Cloudinary
   if (workspace.logoPublicId && workspace.logoPublicId !== logoPublicId) {
@@ -114,8 +109,7 @@ export async function updateWorkspaceLogo(workspaceId: string, logoUrl: string |
 }
 
 export async function getWorkspaceStats(workspaceId: string) {
-  const { member } = await getWorkspaceAndMember(workspaceId);
-  checkOwnerRole(member.role);
+  const { member } = await verifyWorkspacePermission(workspaceId, "workspace:delete");
 
   const [memberCount, projectCount, taskCount, fileCount] = await Promise.all([
     prisma.workspaceMember.count({ where: { workspaceId } }),
@@ -128,8 +122,7 @@ export async function getWorkspaceStats(workspaceId: string) {
 }
 
 export async function deleteWorkspace(workspaceId: string) {
-  const { member, workspace } = await getWorkspaceAndMember(workspaceId);
-  checkOwnerRole(member.role);
+  const { member, workspace } = await verifyWorkspacePermission(workspaceId, "workspace:delete");
 
   // Clean up all Cloudinary files related to this workspace
   const files = await prisma.file.findMany({

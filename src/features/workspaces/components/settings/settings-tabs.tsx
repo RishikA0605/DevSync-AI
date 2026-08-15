@@ -8,6 +8,7 @@ import { DangerZone } from "./danger-zone";
 import { Workspace, WorkspaceMember, WorkspaceInvite } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { Settings, Users, Link as LinkIcon, AlertTriangle } from "lucide-react";
+import { usePermissions } from "@/features/permissions/hooks/use-permissions";
 
 type MemberWithUser = WorkspaceMember & { user: { id: string; name: string | null; email: string | null; image: string | null } };
 type InviteWithCreator = WorkspaceInvite & { createdBy: { id: string; name: string | null; email: string | null; image: string | null } };
@@ -21,16 +22,18 @@ interface SettingsTabsProps {
 }
 
 export function SettingsTabs({ workspace, currentMember, members, invites, workspaceStats }: SettingsTabsProps) {
-  const [activeTab, setActiveTab] = useState("general");
-
-  const isAdmin = currentMember.role === "OWNER" || currentMember.role === "ADMIN";
+  const { hasPermission } = usePermissions(currentMember.role);
 
   const tabs = [
-    { id: "general", label: "General", icon: Settings, show: true },
-    { id: "members", label: "Members", icon: Users, show: true },
-    { id: "invites", label: "Invites", icon: LinkIcon, show: isAdmin },
+    { id: "general", label: "General", icon: Settings, show: hasPermission("workspace:update") },
+    { id: "members", label: "Members", icon: Users, show: true }, // Everyone (except guest) can see member list
+    { id: "invites", label: "Invites", icon: LinkIcon, show: hasPermission("invite:manage") },
     { id: "danger", label: "Danger Zone", icon: AlertTriangle, show: true },
   ].filter(t => t.show);
+
+  const [activeTab, setActiveTab] = useState(tabs.length > 0 ? tabs[0].id : "danger");
+
+
 
   return (
     <div className="flex flex-col md:flex-row gap-8">
@@ -58,9 +61,9 @@ export function SettingsTabs({ workspace, currentMember, members, invites, works
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        {activeTab === "general" && <GeneralSettings workspace={workspace} currentMember={currentMember} />}
+        {activeTab === "general" && hasPermission("workspace:update") && <GeneralSettings workspace={workspace} currentMember={currentMember} />}
         {activeTab === "members" && <MembersSettings workspace={workspace} currentMember={currentMember} members={members} />}
-        {activeTab === "invites" && isAdmin && <InviteSettings workspace={workspace} invites={invites} />}
+        {activeTab === "invites" && hasPermission("invite:manage") && <InviteSettings workspace={workspace} invites={invites} />}
         {activeTab === "danger" && <DangerZone workspace={workspace} currentMember={currentMember} workspaceStats={workspaceStats} />}
       </div>
     </div>

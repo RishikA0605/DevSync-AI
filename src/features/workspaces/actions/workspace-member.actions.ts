@@ -5,6 +5,8 @@ import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { WorkspaceRole } from "@prisma/client";
 import { logActivity } from "@/features/activity/actions/activity.actions";
+import { hasPermission } from "@/features/permissions/utils/has-permission";
+import { Permission } from "@/features/permissions/types";
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -21,16 +23,12 @@ async function getWorkspaceAndMember(workspaceId: string) {
   return { session, member, workspace: member.workspace };
 }
 
-function checkAdminRole(role: WorkspaceRole) {
-  if (role !== "OWNER" && role !== "ADMIN") {
-    throw new Error("Requires ADMIN or OWNER role");
+export async function verifyWorkspacePermission(workspaceId: string, permission: Permission) {
+  const data = await getWorkspaceAndMember(workspaceId);
+  if (!hasPermission(data.member.role, permission)) {
+    throw new Error("Unauthorized: Insufficient permissions");
   }
-}
-
-function checkOwnerRole(role: WorkspaceRole) {
-  if (role !== "OWNER") {
-    throw new Error("Requires OWNER role");
-  }
+  return data;
 }
 
 // ── Member Actions ─────────────────────────────────────────────────────────
@@ -53,8 +51,7 @@ export async function getWorkspaceMembers(workspaceId: string) {
 }
 
 export async function updateMemberRole(workspaceId: string, memberUserId: string, newRole: WorkspaceRole) {
-  const { member, workspace, session } = await getWorkspaceAndMember(workspaceId);
-  checkAdminRole(member.role);
+  const { member, workspace, session } = await verifyWorkspacePermission(workspaceId, "member:change_role");
 
   if (memberUserId === session.user!.id!) throw new Error("Cannot change your own role");
   if (newRole === "OWNER") throw new Error("Use transferOwnership to change owner");
@@ -86,8 +83,7 @@ export async function updateMemberRole(workspaceId: string, memberUserId: string
 }
 
 export async function removeMember(workspaceId: string, memberUserId: string) {
-  const { member, workspace, session } = await getWorkspaceAndMember(workspaceId);
-  checkAdminRole(member.role);
+  const { member, workspace, session } = await verifyWorkspacePermission(workspaceId, "member:manage");
 
   if (memberUserId === session.user!.id!) throw new Error("Use leaveWorkspace to leave");
 
@@ -141,8 +137,7 @@ export async function leaveWorkspace(workspaceId: string) {
 }
 
 export async function transferOwnership(workspaceId: string, newOwnerUserId: string) {
-  const { member, workspace, session } = await getWorkspaceAndMember(workspaceId);
-  checkOwnerRole(member.role);
+  const { member, workspace, session } = await verifyWorkspacePermission(workspaceId, "workspace:transfer");
 
   if (newOwnerUserId === session.user!.id!) throw new Error("You are already the owner");
 

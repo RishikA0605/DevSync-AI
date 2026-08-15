@@ -19,6 +19,7 @@ import {
 import { ConfirmModal } from "@/components/ui/confirm-modal";
 import { deleteAccount } from "@/features/auth/actions/auth.actions";
 import { signOut } from "next-auth/react";
+import { PermissionGuard } from "@/features/permissions/components/permission-guard";
 
 export function DangerZone({
   workspace,
@@ -109,7 +110,7 @@ export function DangerZone({
         )}
 
         {/* Delete Workspace */}
-        {isOwner && (
+        <PermissionGuard role={currentMember.role} permission="workspace:delete">
           <Card className="border-red-900/40 bg-red-950/10 backdrop-blur-sm">
             <CardHeader>
               <div className="flex items-center gap-2">
@@ -131,7 +132,7 @@ export function DangerZone({
               </Button>
             </CardContent>
           </Card>
-        )}
+        </PermissionGuard>
 
         {/* Delete Account */}
         <Card className="border-red-900/40 bg-red-950/10 backdrop-blur-sm">

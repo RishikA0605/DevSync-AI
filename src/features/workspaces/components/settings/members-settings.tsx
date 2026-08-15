@@ -24,12 +24,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ConfirmModal } from "@/components/ui/confirm-modal";
+import { usePermissions } from "@/features/permissions/hooks/use-permissions";
+import { PermissionGuard } from "@/features/permissions/components/permission-guard";
 
 type MemberWithUser = WorkspaceMember & { user: { id: string; name: string | null; email: string | null; image: string | null } };
 
 export function MembersSettings({ workspace, currentMember, members }: { workspace: Workspace, currentMember: WorkspaceMember, members: MemberWithUser[] }) {
-  const isAdmin = currentMember.role === "OWNER" || currentMember.role === "ADMIN";
-  const isOwner = currentMember.role === "OWNER";
+  const { hasPermission } = usePermissions(currentMember.role);
 
   const [isLoading, setIsLoading] = useState<string | null>(null);
 
@@ -90,7 +91,7 @@ export function MembersSettings({ workspace, currentMember, members }: { workspa
               Manage who has access to this workspace and their roles.
             </CardDescription>
           </div>
-          {isOwner && (
+          <PermissionGuard role={currentMember.role} permission="workspace:transfer">
             <Button
               variant="outline"
               size="sm"
@@ -100,7 +101,7 @@ export function MembersSettings({ workspace, currentMember, members }: { workspa
               <Crown className="h-4 w-4 mr-2" />
               Transfer Ownership
             </Button>
-          )}
+          </PermissionGuard>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border border-zinc-800/60 overflow-hidden">
@@ -134,7 +135,7 @@ export function MembersSettings({ workspace, currentMember, members }: { workspa
                     </div>
 
                     <div className="flex items-center gap-3 shrink-0 ml-4">
-                      {isAdmin && !isYou && !isTargetOwner ? (
+                      {hasPermission("member:change_role") && !isYou && !isTargetOwner ? (
                         <div className="flex items-center gap-2">
                           {isRoleUpdating && <Loader2 className="h-4 w-4 text-zinc-500 animate-spin" />}
                           <Select
@@ -158,7 +159,7 @@ export function MembersSettings({ workspace, currentMember, members }: { workspa
                         </div>
                       )}
 
-                      {isAdmin && !isYou && !isTargetOwner ? (
+                      {hasPermission("member:manage") && !isYou && !isTargetOwner ? (
                         <Button
                           variant="ghost"
                           size="icon"
