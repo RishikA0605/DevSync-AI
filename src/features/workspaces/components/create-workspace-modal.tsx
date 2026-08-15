@@ -45,10 +45,16 @@ export function CreateWorkspaceModal({ isOpen, onClose }: CreateWorkspaceModalPr
   async function onSubmit(values: z.infer<typeof createWorkspaceSchema>) {
     try {
       setIsLoading(true);
-      const workspace = await createWorkspace(values);
-      form.reset();
-      onClose();
-      router.push(`/workspace/${workspace.slug}/dashboard`);
+      const response = await createWorkspace(values);
+      if (response.error) {
+        alert(response.error);
+        return;
+      }
+      if (response.workspace) {
+        form.reset();
+        onClose();
+        router.push(`/workspace/${response.workspace.slug}/dashboard`);
+      }
     } catch (error) {
       console.error(error);
     } finally {
