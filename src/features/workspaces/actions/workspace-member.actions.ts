@@ -56,7 +56,7 @@ export async function updateMemberRole(workspaceId: string, memberUserId: string
   const { member, workspace, session } = await getWorkspaceAndMember(workspaceId);
   checkAdminRole(member.role);
 
-  if (memberUserId === session.user.id) throw new Error("Cannot change your own role");
+  if (memberUserId === session.user!.id!) throw new Error("Cannot change your own role");
   if (newRole === "OWNER") throw new Error("Use transferOwnership to change owner");
 
   const targetMember = await prisma.workspaceMember.findUnique({
@@ -73,7 +73,7 @@ export async function updateMemberRole(workspaceId: string, memberUserId: string
   });
 
   await logActivity({
-    userId: session.user.id,
+    userId: session.user!.id!,
     workspaceId,
     action: "updated_member_role",
     entityType: "WorkspaceMember",
@@ -89,7 +89,7 @@ export async function removeMember(workspaceId: string, memberUserId: string) {
   const { member, workspace, session } = await getWorkspaceAndMember(workspaceId);
   checkAdminRole(member.role);
 
-  if (memberUserId === session.user.id) throw new Error("Use leaveWorkspace to leave");
+  if (memberUserId === session.user!.id!) throw new Error("Use leaveWorkspace to leave");
 
   const targetMember = await prisma.workspaceMember.findUnique({
     where: { userId_workspaceId: { userId: memberUserId, workspaceId } },
@@ -104,7 +104,7 @@ export async function removeMember(workspaceId: string, memberUserId: string) {
   });
 
   await logActivity({
-    userId: session.user.id,
+    userId: session.user!.id!,
     workspaceId,
     action: "removed_member",
     entityType: "WorkspaceMember",
@@ -128,11 +128,11 @@ export async function leaveWorkspace(workspaceId: string) {
   });
 
   await logActivity({
-    userId: session.user.id,
+    userId: session.user!.id!,
     workspaceId,
     action: "left_workspace",
     entityType: "WorkspaceMember",
-    entityId: session.user.id,
+    entityId: session.user!.id!,
     details: `Left the workspace`,
   });
 
@@ -144,7 +144,7 @@ export async function transferOwnership(workspaceId: string, newOwnerUserId: str
   const { member, workspace, session } = await getWorkspaceAndMember(workspaceId);
   checkOwnerRole(member.role);
 
-  if (newOwnerUserId === session.user.id) throw new Error("You are already the owner");
+  if (newOwnerUserId === session.user!.id!) throw new Error("You are already the owner");
 
   const targetMember = await prisma.workspaceMember.findUnique({
     where: { userId_workspaceId: { userId: newOwnerUserId, workspaceId } },
@@ -173,7 +173,7 @@ export async function transferOwnership(workspaceId: string, newOwnerUserId: str
   ]);
 
   await logActivity({
-    userId: session.user.id,
+    userId: session.user!.id!,
     workspaceId,
     action: "transferred_ownership",
     entityType: "Workspace",

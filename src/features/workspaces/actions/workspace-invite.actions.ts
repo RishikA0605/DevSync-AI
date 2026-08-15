@@ -48,7 +48,7 @@ export async function createInvite(workspaceId: string, expiresInDays: number | 
   const invite = await prisma.workspaceInvite.create({
     data: {
       workspaceId,
-      createdById: session.user.id,
+      createdById: session.user!.id!,
       token,
       expiresAt,
     },
