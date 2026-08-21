@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { BlockNoteView } from "@blocknote/mantine";
 import { useCreateBlockNote } from "@blocknote/react";
 import { withCollaboration } from "@blocknote/core/yjs";
-import { HocuspocusProvider } from "@hocuspocus/provider";
+
 import * as Y from "yjs";
 import { Loader2, CheckCircle2, WifiOff, AlertCircle } from "lucide-react";
 import "@blocknote/core/fonts/inter.css";
@@ -17,12 +17,13 @@ interface NoteEditorProps {
   currentUser: { name: string; color?: string };
 }
 
+import { useNoteCollaboration } from "../hooks/use-note-collaboration";
+
 type SaveStatus = "connecting" | "saved" | "saving" | "offline";
 
 export function NoteEditor({ noteId, token, isReadOnly, currentUser }: NoteEditorProps) {
-  const [provider, setProvider] = useState<HocuspocusProvider | null>(null);
+  const { provider, status: saveStatus } = useNoteCollaboration(noteId, token, currentUser);
   const [isDark, setIsDark] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<SaveStatus>("connecting");
 
   // Detect dark mode
   useEffect(() => {
@@ -32,39 +33,6 @@ export function NoteEditor({ noteId, token, isReadOnly, currentUser }: NoteEdito
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
   }, []);
-
-  useEffect(() => {
-    // Hocuspocus runs on a dedicated port 3002 (separate from Socket.io on 3001)
-    const wsUrl = `ws://127.0.0.1:3002/note-${noteId}`;
-
-    console.log("Attempting to connect to Hocuspocus at:", wsUrl, "for note:", noteId);
-
-    const newProvider = new HocuspocusProvider({
-      url: wsUrl,
-      name: `note-${noteId}`,
-      token,
-      document: new Y.Doc(),
-      onConnect: () => setSaveStatus("saved"),
-      onDisconnect: () => setSaveStatus("offline"),
-      onSynced: () => setSaveStatus("saved"),
-    });
-
-    newProvider.document.on("update", (_: any, origin: any) => {
-      if (origin !== newProvider) {
-        setSaveStatus("saving");
-        setTimeout(() => setSaveStatus("saved"), 1500);
-      }
-    });
-
-    setProvider(newProvider);
-
-    return () => {
-      // Small delay before destroying to prevent React Strict Mode from breaking the connection
-      setTimeout(() => {
-        newProvider.destroy();
-      }, 0);
-    };
-  }, [noteId, token]);
 
   const editor = useCreateBlockNote(
     provider

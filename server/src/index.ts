@@ -7,8 +7,7 @@ import dotenv from "dotenv";
 import { pubClient, subClient, isRedisEnabled } from "./redis/redis-client";
 import { authMiddleware, AuthenticatedSocket } from "./middleware/auth.middleware";
 import { registerChatHandlers } from "./events/chat.events";
-
-import { hocuspocusServer } from "./hocuspocus";
+import { registerNoteHandlers } from "./events/note.events";
 
 dotenv.config();
 
@@ -32,19 +31,6 @@ app.get("/health", (_req, res) => {
 });
 
 const httpServer = createServer(app);
-
-// ── Hocuspocus: dedicated WebSocket server on port 3002 ────────────────────────
-const wss = new WebSocketServer({ port: 3002 });
-wss.on("connection", (ws, request) => {
-  try {
-    hocuspocusServer.handleConnection(ws, request as any);
-  } catch (err) {
-    console.error("[Hocuspocus] handleConnection error:", err);
-  }
-});
-wss.on("listening", () => {
-  console.log("🚀 Hocuspocus Collaboration Server running on port 3002");
-});
 
 const io = new Server(httpServer, {
   cors: {
@@ -108,10 +94,12 @@ async function startServer() {
       authMiddleware(socket as AuthenticatedSocket, next)
     );
 
+
     // ── Register socket event handlers per connection ─────────────────────────
     io.on("connection", (socket) => {
       console.log(`[WS] Client connected: ${(socket as AuthenticatedSocket).data.userName}`);
       registerChatHandlers(io, socket as AuthenticatedSocket);
+      registerNoteHandlers(io, socket as AuthenticatedSocket);
     });
 
     httpServer.listen(PORT as number, "0.0.0.0", () => {
