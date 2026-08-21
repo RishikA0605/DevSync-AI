@@ -2,10 +2,13 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { createAdapter } from "@socket.io/redis-adapter";
+import { WebSocketServer } from "ws";
 import dotenv from "dotenv";
 import { pubClient, subClient, isRedisEnabled } from "./redis/redis-client";
 import { authMiddleware, AuthenticatedSocket } from "./middleware/auth.middleware";
 import { registerChatHandlers } from "./events/chat.events";
+
+import { hocuspocusServer } from "./hocuspocus";
 
 dotenv.config();
 
@@ -18,12 +21,30 @@ const INTERNAL_SECRET = process.env.INTERNAL_SOCKET_SECRET || "devsync-internal-
 const app = express();
 app.use(express.json());
 
+// Root endpoint to prevent "Cannot GET /" confusion
+app.get("/", (_req, res) => {
+  res.send("DevSync Socket & Collaboration Server is running.");
+});
+
 // Health check endpoint (for Railway deployment)
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", uptime: process.uptime() });
 });
 
 const httpServer = createServer(app);
+
+// ── Hocuspocus: dedicated WebSocket server on port 3002 ────────────────────────
+const wss = new WebSocketServer({ port: 3002 });
+wss.on("connection", (ws, request) => {
+  try {
+    hocuspocusServer.handleConnection(ws, request as any);
+  } catch (err) {
+    console.error("[Hocuspocus] handleConnection error:", err);
+  }
+});
+wss.on("listening", () => {
+  console.log("🚀 Hocuspocus Collaboration Server running on port 3002");
+});
 
 const io = new Server(httpServer, {
   cors: {
@@ -93,7 +114,7 @@ async function startServer() {
       registerChatHandlers(io, socket as AuthenticatedSocket);
     });
 
-    httpServer.listen(PORT, () => {
+    httpServer.listen(PORT as number, "0.0.0.0", () => {
       console.log(`🚀 Socket.io server running on port ${PORT}`);
       console.log(`   CORS allowed from: ${FRONTEND_URL}`);
     });

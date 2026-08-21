@@ -27,6 +27,12 @@ export type Permission =
   | "file:delete"
   | "file:view"
 
+  // Notes
+  | "note:create"
+  | "note:update"
+  | "note:delete"
+  | "note:view"
+
   // Chat
   | "chat:send"
   | "chat:view"
