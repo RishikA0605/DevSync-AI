@@ -8,7 +8,7 @@ const NoteEditor = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex items-center justify-center h-[50vh] text-muted-foreground">
+      <div className="flex items-center justify-center h-[50vh] text-black">
         <Loader2 className="h-6 w-6 animate-spin mr-2" />
         <p>Loading editor...</p>
       </div>

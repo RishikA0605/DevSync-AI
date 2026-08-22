@@ -65,30 +65,30 @@ export function WorkspaceSwitcher({ workspaces, activeSlug, isCollapsed }: Works
             <DropdownMenuItem
               key={workspace.id}
               onClick={() => router.push(`/workspace/${workspace.slug}/dashboard`)}
-              className="flex items-center gap-2 cursor-pointer focus:bg-zinc-800"
+              className="flex items-center gap-2 cursor-pointer focus:bg-zinc-200"
             >
               <Avatar className="h-6 w-6 rounded-md">
                 {workspace.logo ? (
                   <AvatarImage src={workspace.logo} alt={workspace.name} />
                 ) : (
-                  <AvatarFallback className="rounded-md bg-zinc-800 text-xs">
+                  <AvatarFallback className="rounded-md text-xs">
                     {workspace.name.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 )}
               </Avatar>
               <span className="flex-1 truncate">{workspace.name}</span>
               {workspace.slug === activeSlug && (
-                <Check className="h-4 w-4 text-violet-400" />
+                <Check className="h-4 w-4 " />
               )}
             </DropdownMenuItem>
           ))}
           <DropdownMenuSeparator className="bg-zinc-800" />
           <DropdownMenuItem
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 cursor-pointer focus:bg-zinc-800 text-zinc-300"
+            className="flex items-center gap-2 text-zinc-300"
           >
             <div className="h-6 w-6 rounded-md bg-zinc-800 flex items-center justify-center">
-              <Plus className="h-4 w-4 text-zinc-400" />
+              <Plus className="h-4 w-4 text-white" />
             </div>
             <span>Create Workspace</span>
           </DropdownMenuItem>

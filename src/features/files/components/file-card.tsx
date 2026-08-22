@@ -70,8 +70,8 @@ export function FileCard({ file, currentUserId, userRole }: FileCardProps) {
           ) : (
             <div className="flex flex-col items-center gap-2 text-zinc-500 group-hover:text-violet-400 transition-colors">
               {file.type.includes("pdf") ? <FileTextIcon size={40} /> :
-               file.type.includes("zip") || file.type.includes("rar") ? <ArchiveIcon size={40} /> :
-               <FileIcon size={40} />}
+                file.type.includes("zip") || file.type.includes("rar") ? <ArchiveIcon size={40} /> :
+                  <FileIcon size={40} />}
             </div>
           )}
         </a>
@@ -98,8 +98,8 @@ export function FileCard({ file, currentUserId, userRole }: FileCardProps) {
               </span>
             </div>
 
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <Button size="icon" variant="ghost" className="h-7 w-7 text-zinc-400 hover:text-white" asChild>
+            <div className="flex items-center gap-1 ">
+              <Button size="icon" variant="ghost" className="h-7 w-7 text-zinc-400 hover:text-black" asChild>
                 <a href={file.url} target="_blank" rel="noopener noreferrer" download>
                   <Download size={14} />
                 </a>
