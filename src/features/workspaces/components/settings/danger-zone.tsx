@@ -232,7 +232,7 @@ export function DangerZone({
                 setConfirmText("");
               }}
               disabled={isDeleting}
-              className="border-zinc-800 text-zinc-300 hover:bg-zinc-800"
+              className="border-zinc-800 text-zinc-300 hover:bg-white-600"
             >
               Cancel
             </Button>
@@ -240,7 +240,7 @@ export function DangerZone({
               variant="destructive"
               onClick={handleDeleteWorkspace}
               disabled={isDeleting || confirmText !== workspace.name}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-red-600 hover:bg-red-700 text-white"
             >
               {isDeleting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
               Delete Permanently

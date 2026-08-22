@@ -82,7 +82,7 @@ export function NotesList({ notes, workspaceSlug }: NotesListProps) {
     <div className="flex flex-col h-full bg-slate-50/50 dark:bg-zinc-950/50">
       <div className="p-6 pb-4 border-b flex justify-between items-center bg-white dark:bg-zinc-900 sticky top-0 z-10">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Notes</h1>
+          <h1 className="text-2xl font-bold text-black">Notes</h1>
           <p className="text-muted-foreground text-sm mt-1">
             Collaborative documents for your workspace
           </p>
@@ -126,7 +126,7 @@ export function NotesList({ notes, workspaceSlug }: NotesListProps) {
                 onClick={() => router.push(`/workspace/${workspaceSlug}/notes/${note.id}`)}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 to-transparent dark:from-indigo-950/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                
+
                 <div className="relative z-10 flex items-start justify-between">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="bg-indigo-100 dark:bg-indigo-900/30 p-2 rounded-lg text-indigo-600 dark:text-indigo-400">
@@ -136,9 +136,9 @@ export function NotesList({ notes, workspaceSlug }: NotesListProps) {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
-                        variant="ghost"
+
                         size="icon"
-                        className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity -mr-2"
+                        className="h-8 w-8 group-hover:opacity-100 transition-opacity -mr-2"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <MoreVertical className="h-4 w-4" />
@@ -146,7 +146,7 @@ export function NotesList({ notes, workspaceSlug }: NotesListProps) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem
-                        className="text-red-600 focus:text-red-600 cursor-pointer"
+                        className="text-red-600 focus:text-red-600"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleDeleteNote(note.id);
@@ -160,7 +160,7 @@ export function NotesList({ notes, workspaceSlug }: NotesListProps) {
                 </div>
 
                 <div className="relative z-10">
-                  <h3 className="font-semibold text-lg line-clamp-1 mb-1">{note.title}</h3>
+                  <h3 className="font-semibold text-lg text-gray-600 line-clamp-1 mb-1">{note.title}</h3>
                   <p className="text-xs text-muted-foreground">
                     Updated {format(new Date(note.updatedAt), "MMM d, yyyy")}
                   </p>
