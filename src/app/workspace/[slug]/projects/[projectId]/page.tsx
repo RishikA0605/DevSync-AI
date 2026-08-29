@@ -17,29 +17,30 @@ export default async function ProjectKanbanPage({
 
   const { slug, projectId } = await params;
 
-  // Verify workspace access and fetch project details
-  const project = await prisma.project.findFirst({
-    where: {
-      id: projectId,
-      workspace: {
-        slug,
-        members: { some: { userId: session.user.id } },
+  // Parallelize project access check and task fetch
+  const [project, rawTasks] = await Promise.all([
+    prisma.project.findFirst({
+      where: {
+        id: projectId,
+        workspace: {
+          slug,
+          members: { some: { userId: session.user.id } },
+        },
       },
-    },
-    include: {
-      workspace: {
-        include: {
-          members: {
-            include: { user: { select: { id: true, name: true, image: true } } },
+      include: {
+        workspace: {
+          include: {
+            members: {
+              include: { user: { select: { id: true, name: true, image: true } } },
+            },
           },
         },
       },
-    },
-  });
+    }),
+    getProjectTasks(projectId),
+  ]);
 
   if (!project) redirect(`/workspace/${slug}/projects`);
-
-  const rawTasks = await getProjectTasks(projectId);
 
   // Map tasks to TaskCardData
   const tasks: TaskCardData[] = rawTasks.map(t => ({

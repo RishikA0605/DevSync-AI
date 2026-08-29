@@ -5,6 +5,7 @@ import { Hash, Plus, ChevronDown, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createChannel } from "@/features/chat/actions/chat.actions";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface Channel {
   id: string;
@@ -74,11 +75,10 @@ export function ChatSidebar({
       {/* Channel List */}
       <div className="flex-1 overflow-y-auto py-2 space-y-0.5 px-2">
         {channels.map(channel => (
-          <button
+          <Link
             key={channel.id}
-            onClick={() =>
-              router.push(`/workspace/${workspaceSlug}/chat/${channel.id}`)
-            }
+            href={`/workspace/${workspaceSlug}/chat/${channel.id}`}
+            prefetch={true}
             className={cn(
               "w-full flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-colors",
               activeChannelId === channel.id
@@ -93,7 +93,7 @@ export function ChatSidebar({
                 {unreadCounts[channel.id] > 99 ? "99+" : unreadCounts[channel.id]}
               </span>
             )}
-          </button>
+          </Link>
         ))}
 
         {channels.length === 0 && (

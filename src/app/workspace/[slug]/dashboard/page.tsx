@@ -65,6 +65,7 @@ export default async function WorkspaceDashboardPage({
 
   if (!workspace) redirect("/dashboard");
 
+  // Fetch stats in parallel after we have workspace id
   const stats = await getWorkspaceStats(workspace.id, session.user.id!);
   const taskCompletionRate = stats.taskCount > 0
     ? Math.round((stats.tasksDone / stats.taskCount) * 100)

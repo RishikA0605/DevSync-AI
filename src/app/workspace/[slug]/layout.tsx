@@ -1,5 +1,6 @@
 import { Sidebar } from "@/components/shared/sidebar";
 import { getUserWorkspaces } from "@/features/workspaces/actions/workspace.actions";
+import { Suspense } from "react";
 
 export default async function WorkspaceLayout({
   children,
@@ -8,14 +9,15 @@ export default async function WorkspaceLayout({
   children: React.ReactNode;
   params: Promise<{ slug: string }>;
 }) {
-  const resolvedParams = await params;
-  const workspaces = await getUserWorkspaces();
+  const [resolvedParams, workspaces] = await Promise.all([
+    params,
+    getUserWorkspaces(),
+  ]);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background dark:bg-zinc-950 text-zinc-800">
+    <div className="flex h-screen overflow-hidden bg-background dark:bg-zinc-950 text-foreground">
       <Sidebar workspaceSlug={resolvedParams.slug} workspaces={workspaces} />
       <main className="flex-1 flex flex-col overflow-hidden">
-        {/* We can add a generic Header here later if needed */}
         <div className="flex-1 overflow-y-auto">
           {children}
         </div>

@@ -18,17 +18,23 @@ export default async function NoteEditorPage({
 
   const { slug, noteId } = await params;
 
-  // 1. Fetch note
-  const note = await prisma.note.findUnique({
-    where: { id: noteId },
-    select: { title: true, workspaceId: true },
-  });
+  // Fetch note + workspace membership in parallel
+  const [note, workspace] = await Promise.all([
+    prisma.note.findUnique({
+      where: { id: noteId },
+      select: { title: true, workspaceId: true },
+    }),
+    prisma.workspace.findUnique({
+      where: { slug },
+      select: { id: true },
+    }),
+  ]);
 
   if (!note) {
     redirect(`/workspace/${slug}/notes`);
   }
 
-  // 2. Check membership
+  // Check membership
   const membership = await prisma.workspaceMember.findUnique({
     where: {
       userId_workspaceId: {

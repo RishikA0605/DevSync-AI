@@ -8,27 +8,28 @@ import { Permission } from "@/features/permissions/types";
 
 // ── Helper: resolve workspace slug → id and check membership ─────────────────
 
-async function getWorkspaceAndMemberBySlug(workspaceSlug: string) {
+import { cache } from "react";
+
+const getWorkspaceAndMemberBySlug = cache(async (workspaceSlug: string) => {
   const session = await auth();
   if (!session?.user?.id) throw new Error("Unauthorized");
 
   const workspace = await prisma.workspace.findUnique({
     where: { slug: workspaceSlug },
-  });
-  if (!workspace) throw new Error("Workspace not found");
-
-  const member = await prisma.workspaceMember.findUnique({
-    where: {
-      userId_workspaceId: {
-        userId: session.user.id,
-        workspaceId: workspace.id,
+    include: {
+      members: {
+        where: { userId: session.user.id },
       },
     },
   });
+
+  if (!workspace) throw new Error("Workspace not found");
+  
+  const member = workspace.members[0];
   if (!member) throw new Error("Not a member of this workspace");
 
   return { session, member, workspace };
-}
+});
 
 async function checkNotePermission(workspaceSlug: string, permission: Permission) {
   const data = await getWorkspaceAndMemberBySlug(workspaceSlug);

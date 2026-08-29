@@ -55,7 +55,9 @@ export async function createWorkspace(data: CreateWorkspaceValues) {
   }
 }
 
-export async function getUserWorkspaces() {
+import { cache } from "react";
+
+export const getUserWorkspaces = cache(async () => {
   const session = await auth();
   if (!session?.user?.id) return [];
 
@@ -71,4 +73,4 @@ export async function getUserWorkspaces() {
       createdAt: "desc",
     },
   });
-}
+});
