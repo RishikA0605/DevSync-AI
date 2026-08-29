@@ -104,8 +104,8 @@ export default async function WorkspaceDashboardPage({
       {/* Hero Header */}
       <div className="relative overflow-hidden border-b border-border dark:border-border dark:border-zinc-800/60">
         <div className="absolute inset-0 bg-gradient-to-br from-violet-950/40 via-zinc-950 to-blue-950/30 pointer-events-none" />
-        <div className="relative px-8 py-10">
-          <div className="flex items-start justify-between">
+        <div className="relative p-6 md:px-8 md:py-10">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -143,7 +143,7 @@ export default async function WorkspaceDashboardPage({
         </div>
       </div>
 
-      <div className="px-8 py-8 space-y-8">
+      <div className="p-4 md:p-8 space-y-6 md:space-y-8">
         {/* Stat Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {statCards.map((stat) => (

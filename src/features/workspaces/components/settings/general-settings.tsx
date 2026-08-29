@@ -110,7 +110,7 @@ export function GeneralSettings({ workspace, currentMember }: { workspace: Works
         <CardContent className="space-y-6">
           
           {/* Logo Section */}
-          <div className="flex items-center gap-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
             <Avatar className="h-20 w-20 rounded-xl border border-border dark:border-zinc-800 bg-muted dark:bg-zinc-800/50 shadow-md">
               {workspace.logo ? (
                 <AvatarImage src={workspace.logo} alt={workspace.name} className="object-cover" />

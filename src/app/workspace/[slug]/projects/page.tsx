@@ -23,7 +23,7 @@ export default async function ProjectsPage({ params }: { params: Promise<{ slug:
   const projects = await getWorkspaceProjects(workspace.id);
 
   return (
-    <div className="min-h-full bg-background dark:bg-zinc-950 text-foreground dark:text-zinc-100 p-8 space-y-8">
+    <div className="min-h-full bg-background dark:bg-zinc-950 text-foreground dark:text-zinc-100 p-4 md:p-8 space-y-6 md:space-y-8">
       <ProjectsHeader workspaceId={workspace.id} />
 
       {projects.length === 0 ? (

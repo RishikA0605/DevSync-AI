@@ -54,9 +54,9 @@ export function ChatSidebar({
   };
 
   return (
-    <aside className="w-64 flex flex-col bg-card dark:bg-zinc-900 border-r border-white/5 shrink-0 h-full">
+    <aside className="w-full md:w-64 flex flex-col bg-card dark:bg-zinc-900 h-full">
       {/* Header */}
-      <div className="px-4 py-4 border-b border-white/5">
+      <div className="px-4 py-4 border-b border-border dark:border-zinc-800/60">
         <div className="flex items-center justify-between">
           <span className="text-sm font-semibold text-foreground dark:text-zinc-300 flex items-center gap-1">
             <ChevronDown className="w-3 h-3" />
