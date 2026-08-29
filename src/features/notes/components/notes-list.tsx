@@ -4,6 +4,7 @@ import { useState } from "react";
 import { format } from "date-fns";
 import { Plus, Search, FileText, Trash2, MoreVertical, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -120,10 +121,11 @@ export function NotesList({ notes, workspaceSlug }: NotesListProps) {
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredNotes.map((note) => (
-              <div
+              <Link
                 key={note.id}
+                href={`/workspace/${workspaceSlug}/notes/${note.id}`}
+                prefetch={true}
                 className="group relative flex flex-col justify-between p-5 rounded-2xl border bg-white dark:bg-card dark:bg-zinc-900 shadow-sm hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-900/50 transition-all cursor-pointer overflow-hidden"
-                onClick={() => router.push(`/workspace/${workspaceSlug}/notes/${note.id}`)}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 to-transparent dark:from-indigo-950/10 opacity-0 group-hover:opacity-100 transition-opacity" />
 
@@ -165,7 +167,7 @@ export function NotesList({ notes, workspaceSlug }: NotesListProps) {
                     Updated {format(new Date(note.updatedAt), "MMM d, yyyy")}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}

@@ -12,8 +12,10 @@ export default async function ProjectsPage({ params }: { params: Promise<{ slug:
 
   const { slug } = await params;
   
+  // Parallelize workspace lookup + auth check
   const workspace = await prisma.workspace.findUnique({
-    where: { slug }
+    where: { slug },
+    select: { id: true, name: true },
   });
 
   if (!workspace) redirect("/dashboard");

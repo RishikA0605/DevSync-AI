@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Workspace } from "@prisma/client";
 import { Sparkles, ChevronsUpDown, Plus, Check } from "lucide-react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -64,22 +65,24 @@ export function WorkspaceSwitcher({ workspaces, activeSlug, isCollapsed }: Works
           {workspaces.map((workspace) => (
             <DropdownMenuItem
               key={workspace.id}
-              onClick={() => router.push(`/workspace/${workspace.slug}/dashboard`)}
-              className="flex items-center gap-2 cursor-pointer focus:bg-zinc-200"
+              asChild
+              className="flex items-center gap-2 cursor-pointer focus:bg-zinc-200 p-0"
             >
-              <Avatar className="h-6 w-6 rounded-md">
-                {workspace.logo ? (
-                  <AvatarImage src={workspace.logo} alt={workspace.name} />
-                ) : (
-                  <AvatarFallback className="rounded-md text-xs">
-                    {workspace.name.charAt(0).toUpperCase()}
-                  </AvatarFallback>
+              <Link href={`/workspace/${workspace.slug}/dashboard`} prefetch={true} className="flex flex-1 items-center gap-2 px-2 py-1.5 w-full">
+                <Avatar className="h-6 w-6 rounded-md">
+                  {workspace.logo ? (
+                    <AvatarImage src={workspace.logo} alt={workspace.name} />
+                  ) : (
+                    <AvatarFallback className="rounded-md text-xs">
+                      {workspace.name.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  )}
+                </Avatar>
+                <span className="flex-1 truncate">{workspace.name}</span>
+                {workspace.slug === activeSlug && (
+                  <Check className="h-4 w-4 " />
                 )}
-              </Avatar>
-              <span className="flex-1 truncate">{workspace.name}</span>
-              {workspace.slug === activeSlug && (
-                <Check className="h-4 w-4 " />
-              )}
+              </Link>
             </DropdownMenuItem>
           ))}
           <DropdownMenuSeparator className="bg-muted dark:bg-zinc-800" />
