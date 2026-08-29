@@ -32,7 +32,7 @@ export const AuthCard = ({ title, description, footer }: AuthCardProps) => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Suspense fallback={<div className="h-[104px] w-full animate-pulse bg-zinc-800 rounded-lg"></div>}>
+        <Suspense fallback={<div className="h-[104px] w-full animate-pulse bg-muted dark:bg-zinc-800 rounded-lg"></div>}>
           <SocialLogin />
         </Suspense>
       </CardContent>

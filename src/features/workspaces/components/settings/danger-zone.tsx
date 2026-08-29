@@ -91,7 +91,7 @@ export function DangerZone({
                 <LogOut className="h-5 w-5 text-orange-500" />
                 <CardTitle className="text-orange-500">Leave Workspace</CardTitle>
               </div>
-              <CardDescription className="text-zinc-400">
+              <CardDescription className="text-muted-foreground dark:text-zinc-400">
                 Revoke your own access to this workspace. You will need a new invite link to rejoin.
               </CardDescription>
             </CardHeader>
@@ -117,7 +117,7 @@ export function DangerZone({
                 <Trash2 className="h-5 w-5 text-red-500" />
                 <CardTitle className="text-red-500">Delete Workspace</CardTitle>
               </div>
-              <CardDescription className="text-zinc-400">
+              <CardDescription className="text-muted-foreground dark:text-zinc-400">
                 Permanently delete this workspace and all of its contents. This action is not reversible.
               </CardDescription>
             </CardHeader>
@@ -125,7 +125,7 @@ export function DangerZone({
               <Button
                 variant="destructive"
                 onClick={() => setDeleteModalOpen(true)}
-                className="bg-red-600 hover:bg-red-700 text-white"
+                className="bg-red-600 hover:bg-red-700 text-foreground dark:text-white"
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Delete Workspace
@@ -141,7 +141,7 @@ export function DangerZone({
               <AlertTriangle className="h-5 w-5 text-red-500" />
               <CardTitle className="text-red-500">Delete Account</CardTitle>
             </div>
-            <CardDescription className="text-zinc-400">
+            <CardDescription className="text-muted-foreground dark:text-zinc-400">
               Permanently remove your account from the DevSync AI platform. Workspaces you own will also be deleted.
             </CardDescription>
           </CardHeader>
@@ -150,7 +150,7 @@ export function DangerZone({
               variant="destructive"
               onClick={() => setAccountDeleteModal(true)}
               disabled={accountDeleteLoading}
-              className="bg-red-600 hover:bg-red-700 text-white font-medium"
+              className="bg-red-600 hover:bg-red-700 text-foreground dark:text-white font-medium"
             >
               {accountDeleteLoading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Trash2 className="h-4 w-4 mr-2" />}
               Delete My Account
@@ -188,14 +188,14 @@ export function DangerZone({
         if (!open) setConfirmText("");
         setDeleteModalOpen(open);
       }}>
-        <DialogContent className="sm:max-w-[425px] bg-zinc-950 border-red-900/30">
+        <DialogContent className="sm:max-w-[425px] bg-background dark:bg-zinc-950 border-red-900/30">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-500">
               <AlertTriangle className="h-5 w-5" />
               Delete Workspace
             </DialogTitle>
-            <DialogDescription className="text-zinc-400 pt-3">
-              This action cannot be undone. This will permanently delete the <strong className="text-zinc-200">{workspace.name}</strong> workspace and all of its data.
+            <DialogDescription className="text-muted-foreground dark:text-zinc-400 pt-3">
+              This action cannot be undone. This will permanently delete the <strong className="text-foreground dark:text-zinc-200">{workspace.name}</strong> workspace and all of its data.
             </DialogDescription>
           </DialogHeader>
 
@@ -211,15 +211,15 @@ export function DangerZone({
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-300">
-                Type <strong className="text-white">{workspace.name}</strong> to confirm.
+              <label className="text-sm font-medium text-foreground dark:text-zinc-300">
+                Type <strong className="text-foreground dark:text-white">{workspace.name}</strong> to confirm.
               </label>
               <Input
                 value={confirmText}
                 onChange={(e) => setConfirmText(e.target.value)}
                 disabled={isDeleting}
                 placeholder={workspace.name}
-                className="bg-zinc-900 border-zinc-800 text-white placeholder:text-zinc-600"
+                className="bg-card dark:bg-zinc-900 border-border dark:border-zinc-800 text-foreground dark:text-white placeholder:text-zinc-600"
               />
             </div>
           </div>
@@ -232,7 +232,7 @@ export function DangerZone({
                 setConfirmText("");
               }}
               disabled={isDeleting}
-              className="border-zinc-800 text-zinc-300 hover:bg-white-600"
+              className="border-border dark:border-zinc-800 text-foreground dark:text-zinc-300 hover:bg-white-600"
             >
               Cancel
             </Button>
@@ -240,7 +240,7 @@ export function DangerZone({
               variant="destructive"
               onClick={handleDeleteWorkspace}
               disabled={isDeleting || confirmText !== workspace.name}
-              className="bg-red-600 hover:bg-red-700 text-white"
+              className="bg-red-600 hover:bg-red-700 text-foreground dark:text-white"
             >
               {isDeleting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
               Delete Permanently

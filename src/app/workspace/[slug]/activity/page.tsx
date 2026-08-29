@@ -31,16 +31,16 @@ export default async function ActivityPage({ params }: { params: Promise<{ slug:
   });
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-zinc-950 overflow-hidden">
+    <div className="flex-1 flex flex-col h-full bg-background dark:bg-zinc-950 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center gap-3 p-6 border-b border-zinc-800/60 shrink-0">
+      <div className="flex items-center gap-3 p-6 border-b border-border dark:border-border dark:border-zinc-800/60 shrink-0">
         <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-violet-500/20 to-blue-500/20 border border-violet-500/20 flex items-center justify-center">
           <Activity size={18} className="text-violet-400" />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">Activity Feed</h1>
-          <p className="text-zinc-400 text-sm mt-0.5 capitalize">
-            Recent events in <span className="text-zinc-200">{slug}</span> workspace
+          <h1 className="text-xl font-bold text-foreground dark:text-white tracking-tight">Activity Feed</h1>
+          <p className="text-muted-foreground dark:text-zinc-400 text-sm mt-0.5 capitalize">
+            Recent events in <span className="text-foreground dark:text-zinc-200">{slug}</span> workspace
           </p>
         </div>
       </div>

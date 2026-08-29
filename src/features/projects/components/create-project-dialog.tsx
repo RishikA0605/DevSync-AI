@@ -37,12 +37,12 @@ export function CreateProjectDialog({ workspaceSlug }: { workspaceSlug: string }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="bg-violet-600 hover:bg-violet-700 text-white">
+        <Button size="sm" className="bg-violet-600 hover:bg-violet-700 text-foreground dark:text-white">
           <Plus className="h-4 w-4 mr-2" />
           New Project
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-zinc-950 border-zinc-800 text-zinc-100">
+      <DialogContent className="bg-background dark:bg-zinc-950 border-border dark:border-zinc-800 text-foreground dark:text-zinc-100">
         <DialogHeader>
           <DialogTitle>Create New Project</DialogTitle>
         </DialogHeader>
@@ -55,7 +55,7 @@ export function CreateProjectDialog({ workspaceSlug }: { workspaceSlug: string }
                 <FormItem>
                   <FormLabel>Project Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Frontend Redesign" className="bg-zinc-900 border-zinc-800" {...field} />
+                    <Input placeholder="e.g. Frontend Redesign" className="bg-card dark:bg-zinc-900 border-border dark:border-zinc-800" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -70,7 +70,7 @@ export function CreateProjectDialog({ workspaceSlug }: { workspaceSlug: string }
                   <FormControl>
                     <Textarea 
                       placeholder="What is this project about?" 
-                      className="bg-zinc-900 border-zinc-800 resize-none" 
+                      className="bg-card dark:bg-zinc-900 border-border dark:border-zinc-800 resize-none" 
                       {...field} 
                     />
                   </FormControl>

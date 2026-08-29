@@ -30,7 +30,7 @@ export default async function ChatIndexPage({ params }: Props) {
   }
 
   return (
-    <div className="flex items-center justify-center h-full text-zinc-500 text-sm">
+    <div className="flex items-center justify-center h-full text-muted-foreground dark:text-zinc-500 text-sm">
       No channels found.
     </div>
   );

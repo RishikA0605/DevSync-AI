@@ -48,14 +48,14 @@ export function ConversationList({ conversations, workspaceId, activeId, onSelec
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800/60">
-        <span className="text-xs font-semibold text-zinc-400 tracking-wider uppercase">Conversations</span>
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border dark:border-border dark:border-zinc-800/60">
+        <span className="text-xs font-semibold text-muted-foreground dark:text-zinc-400 tracking-wider uppercase">Conversations</span>
         <Button
           size="icon"
           variant="ghost"
           onClick={handleNew}
           disabled={creating}
-          className="h-7 w-7 text-zinc-500 hover:text-violet-400 hover:bg-zinc-800"
+          className="h-7 w-7 text-muted-foreground dark:text-zinc-500 hover:text-violet-400 hover:bg-muted dark:bg-zinc-800"
           title="New Chat"
         >
           <Plus size={15} />
@@ -77,8 +77,8 @@ export function ConversationList({ conversations, workspaceId, activeId, onSelec
               className={cn(
                 "group flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors",
                 activeId === conv.id
-                  ? "bg-zinc-800 text-white"
-                  : "text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200"
+                  ? "bg-muted dark:bg-zinc-800 text-foreground dark:text-white"
+                  : "text-muted-foreground dark:text-zinc-400 hover:bg-muted dark:bg-zinc-800/50 hover:text-foreground dark:text-zinc-200"
               )}
             >
               <MessageSquare size={13} className="shrink-0" />

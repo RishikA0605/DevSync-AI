@@ -58,9 +58,9 @@ export function FileCard({ file, currentUserId, userRole }: FileCardProps) {
 
   return (
     <>
-      <div className="group relative flex flex-col overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-900 transition-colors">
+      <div className="group relative flex flex-col overflow-hidden rounded-xl border border-border dark:border-zinc-800 bg-card dark:bg-zinc-900/50 hover:bg-card dark:bg-zinc-900 transition-colors">
         {/* File Preview */}
-        <a href={file.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center h-40 bg-zinc-950/50">
+        <a href={file.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center h-40 bg-background dark:bg-zinc-950/50">
           {isImage ? (
             <img
               src={file.url}
@@ -68,7 +68,7 @@ export function FileCard({ file, currentUserId, userRole }: FileCardProps) {
               className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
             />
           ) : (
-            <div className="flex flex-col items-center gap-2 text-zinc-500 group-hover:text-violet-400 transition-colors">
+            <div className="flex flex-col items-center gap-2 text-muted-foreground dark:text-zinc-500 group-hover:text-violet-400 transition-colors">
               {file.type.includes("pdf") ? <FileTextIcon size={40} /> :
                 file.type.includes("zip") || file.type.includes("rar") ? <ArchiveIcon size={40} /> :
                   <FileIcon size={40} />}
@@ -78,28 +78,28 @@ export function FileCard({ file, currentUserId, userRole }: FileCardProps) {
 
         {/* File Info */}
         <div className="p-4 flex flex-col flex-1">
-          <h3 className="font-medium text-zinc-100 line-clamp-1 group-hover:text-violet-400 transition-colors" title={file.name}>
+          <h3 className="font-medium text-foreground dark:text-zinc-100 line-clamp-1 group-hover:text-violet-400 transition-colors" title={file.name}>
             {file.name}
           </h3>
-          <p className="text-xs text-zinc-500 mt-1">
+          <p className="text-xs text-muted-foreground dark:text-zinc-500 mt-1">
             {formatBytes(file.size)} • {file.type.split("/")[1]?.toUpperCase() || "FILE"}
           </p>
 
           <div className="flex items-center justify-between mt-4">
             <div className="flex items-center gap-2">
-              <Avatar className="h-6 w-6 border border-zinc-800">
+              <Avatar className="h-6 w-6 border border-border dark:border-zinc-800">
                 <AvatarImage src={file.uploader.image || ""} />
-                <AvatarFallback className="text-[10px] bg-zinc-800 text-zinc-400">
+                <AvatarFallback className="text-[10px] bg-muted dark:bg-zinc-800 text-muted-foreground dark:text-zinc-400">
                   {file.uploader.name?.charAt(0) || "U"}
                 </AvatarFallback>
               </Avatar>
-              <span className="text-xs text-zinc-400">
+              <span className="text-xs text-muted-foreground dark:text-zinc-400">
                 {formatDistanceToNow(new Date(file.createdAt), { addSuffix: true })}
               </span>
             </div>
 
             <div className="flex items-center gap-1 ">
-              <Button size="icon" variant="ghost" className="h-7 w-7 text-zinc-400 hover:text-black" asChild>
+              <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground dark:text-zinc-400 hover:text-black" asChild>
                 <a href={file.url} target="_blank" rel="noopener noreferrer" download>
                   <Download size={14} />
                 </a>
@@ -110,7 +110,7 @@ export function FileCard({ file, currentUserId, userRole }: FileCardProps) {
                   variant="ghost"
                   onClick={() => setDeleteModal(true)}
                   disabled={isDeleting}
-                  className="h-7 w-7 text-zinc-400 hover:text-red-400"
+                  className="h-7 w-7 text-muted-foreground dark:text-zinc-400 hover:text-red-400"
                 >
                   <Trash2 size={14} />
                 </Button>

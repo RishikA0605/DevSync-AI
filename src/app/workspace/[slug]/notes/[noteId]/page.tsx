@@ -59,12 +59,12 @@ export default async function NoteEditorPage({
   );
 
   return (
-    <div className="flex flex-col h-full bg-slate-50/50 dark:bg-zinc-950/50 overflow-hidden">
-      <div className="flex items-center gap-2 p-4 border-b bg-white dark:bg-zinc-900 shadow-sm z-10 shrink-0">
+    <div className="flex flex-col h-full bg-slate-50/50 dark:bg-background dark:bg-zinc-950/50 overflow-hidden">
+      <div className="flex items-center gap-2 p-4 border-b bg-white dark:bg-card dark:bg-zinc-900 shadow-sm z-10 shrink-0">
         <FileText className="h-5 w-5 text-black-500" />
         <h1 className="text-xl text-black font-semibold">{note.title}</h1>
         {isReadOnly && (
-          <span className="ml-2 text-xs font-medium bg-slate-100 dark:bg-zinc-800 text-black px-2 py-1 rounded-md">
+          <span className="ml-2 text-xs font-medium bg-slate-100 dark:bg-muted dark:bg-zinc-800 text-black px-2 py-1 rounded-md">
             Read Only
           </span>
         )}

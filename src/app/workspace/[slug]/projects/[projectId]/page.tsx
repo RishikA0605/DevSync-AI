@@ -57,20 +57,20 @@ export default async function ProjectKanbanPage({
   const members = project.workspace.members.map(m => m.user);
 
   return (
-    <div className="h-full flex flex-col bg-zinc-950 text-zinc-100 overflow-hidden">
+    <div className="h-full flex flex-col bg-background dark:bg-zinc-950 text-foreground dark:text-zinc-100 overflow-hidden">
       {/* Header */}
-      <div className="flex flex-col gap-2 p-6 border-b border-zinc-800/60 shrink-0">
+      <div className="flex flex-col gap-2 p-6 border-b border-border dark:border-border dark:border-zinc-800/60 shrink-0">
         <Link 
           href={`/workspace/${slug}/projects`}
-          className="flex items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-300 w-fit transition-colors"
+          className="flex items-center gap-1 text-xs font-medium text-muted-foreground dark:text-zinc-500 hover:text-foreground dark:text-zinc-300 w-fit transition-colors"
         >
           <ChevronLeft size={14} /> Back to Projects
         </Link>
         <div className="flex items-end justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-white">{project.name}</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground dark:text-white">{project.name}</h1>
             {project.description && (
-              <p className="text-sm text-zinc-400 mt-1 max-w-xl line-clamp-1">{project.description}</p>
+              <p className="text-sm text-muted-foreground dark:text-zinc-400 mt-1 max-w-xl line-clamp-1">{project.description}</p>
             )}
           </div>
         </div>

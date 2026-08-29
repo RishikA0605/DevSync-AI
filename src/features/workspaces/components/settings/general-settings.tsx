@@ -100,10 +100,10 @@ export function GeneralSettings({ workspace, currentMember }: { workspace: Works
 
   return (
     <div className="space-y-6">
-      <Card className="border-zinc-800/60 bg-zinc-900/40 backdrop-blur-sm">
+      <Card className="border-border dark:border-border dark:border-zinc-800/60 bg-card dark:bg-zinc-900/40 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle className="text-xl text-white">General Settings</CardTitle>
-          <CardDescription className="text-zinc-400">
+          <CardTitle className="text-xl text-foreground dark:text-white">General Settings</CardTitle>
+          <CardDescription className="text-muted-foreground dark:text-zinc-400">
             Update your workspace identity.
           </CardDescription>
         </CardHeader>
@@ -111,7 +111,7 @@ export function GeneralSettings({ workspace, currentMember }: { workspace: Works
           
           {/* Logo Section */}
           <div className="flex items-center gap-6">
-            <Avatar className="h-20 w-20 rounded-xl border border-zinc-800 bg-zinc-800/50 shadow-md">
+            <Avatar className="h-20 w-20 rounded-xl border border-border dark:border-zinc-800 bg-muted dark:bg-zinc-800/50 shadow-md">
               {workspace.logo ? (
                 <AvatarImage src={workspace.logo} alt={workspace.name} className="object-cover" />
               ) : (
@@ -122,8 +122,8 @@ export function GeneralSettings({ workspace, currentMember }: { workspace: Works
             </Avatar>
             
             <div className="space-y-2">
-              <h3 className="text-sm font-medium text-white">Workspace Logo</h3>
-              <p className="text-xs text-zinc-500 max-w-sm">
+              <h3 className="text-sm font-medium text-foreground dark:text-white">Workspace Logo</h3>
+              <p className="text-xs text-muted-foreground dark:text-zinc-500 max-w-sm">
                 Recommended size is 256x256px. Max 2MB.
               </p>
               {isAdmin && (
@@ -140,7 +140,7 @@ export function GeneralSettings({ workspace, currentMember }: { workspace: Works
                         size="sm" 
                         onClick={() => open()}
                         disabled={isUploading}
-                        className="h-8 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 hover:text-white"
+                        className="h-8 bg-muted dark:bg-zinc-800 text-foreground dark:text-zinc-300 hover:bg-zinc-700 hover:text-foreground dark:text-white"
                       >
                         {isUploading ? <Loader2 className="h-3 w-3 mr-2 animate-spin" /> : <ImageIcon className="h-3 w-3 mr-2" />}
                         {workspace.logo ? "Change Logo" : "Upload Logo"}
@@ -163,7 +163,7 @@ export function GeneralSettings({ workspace, currentMember }: { workspace: Works
             </div>
           </div>
 
-          <div className="w-full h-px bg-zinc-800/60 my-6" />
+          <div className="w-full h-px bg-muted dark:bg-muted dark:bg-zinc-800/60 my-6" />
 
           {/* Form Section */}
           <Form {...form}>
@@ -173,12 +173,12 @@ export function GeneralSettings({ workspace, currentMember }: { workspace: Works
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-zinc-300">Workspace Name</FormLabel>
+                    <FormLabel className="text-foreground dark:text-zinc-300">Workspace Name</FormLabel>
                     <FormControl>
                       <Input 
                         {...field} 
                         disabled={!isAdmin || isUpdating} 
-                        className="bg-zinc-950 border-zinc-800 text-white focus-visible:ring-violet-500" 
+                        className="bg-background dark:bg-zinc-950 border-border dark:border-zinc-800 text-foreground dark:text-white focus-visible:ring-violet-500" 
                       />
                     </FormControl>
                     <FormMessage className="text-red-400" />
@@ -191,21 +191,21 @@ export function GeneralSettings({ workspace, currentMember }: { workspace: Works
                 name="slug"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-zinc-300">Workspace Slug URL</FormLabel>
+                    <FormLabel className="text-foreground dark:text-zinc-300">Workspace Slug URL</FormLabel>
                     <div className="flex rounded-md shadow-sm">
-                      <span className="inline-flex items-center rounded-l-md border border-r-0 border-zinc-800 bg-zinc-900/50 px-3 text-sm text-zinc-500">
+                      <span className="inline-flex items-center rounded-l-md border border-r-0 border-border dark:border-zinc-800 bg-card dark:bg-zinc-900/50 px-3 text-sm text-muted-foreground dark:text-zinc-500">
                         devsync.app/workspace/
                       </span>
                       <FormControl>
                         <Input 
                           {...field} 
                           disabled={!isOwner || isUpdating} 
-                          className="rounded-l-none bg-zinc-950 border-zinc-800 text-white focus-visible:ring-violet-500" 
+                          className="rounded-l-none bg-background dark:bg-zinc-950 border-border dark:border-zinc-800 text-foreground dark:text-white focus-visible:ring-violet-500" 
                         />
                       </FormControl>
                     </div>
                     {!isOwner && (
-                      <p className="text-[11px] text-zinc-500 mt-1">Only the workspace owner can change the slug.</p>
+                      <p className="text-[11px] text-muted-foreground dark:text-zinc-500 mt-1">Only the workspace owner can change the slug.</p>
                     )}
                     <FormMessage className="text-red-400" />
                   </FormItem>
@@ -217,7 +217,7 @@ export function GeneralSettings({ workspace, currentMember }: { workspace: Works
                   <Button 
                     type="submit" 
                     disabled={isUpdating || (!form.formState.isDirty)}
-                    className="bg-violet-600 hover:bg-violet-700 text-white"
+                    className="bg-violet-600 hover:bg-violet-700 text-foreground dark:text-white"
                   >
                     {isUpdating ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
                     Save Changes
@@ -231,26 +231,26 @@ export function GeneralSettings({ workspace, currentMember }: { workspace: Works
 
       {/* Slug Change Warning Modal */}
       <Dialog open={slugWarningOpen} onOpenChange={setSlugWarningOpen}>
-        <DialogContent className="sm:max-w-[425px] bg-zinc-950 border-red-900/30">
+        <DialogContent className="sm:max-w-[425px] bg-background dark:bg-zinc-950 border-red-900/30">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-500">
               <AlertTriangle className="h-5 w-5" />
               Change Workspace URL?
             </DialogTitle>
-            <DialogDescription className="text-zinc-400 pt-3">
+            <DialogDescription className="text-muted-foreground dark:text-zinc-400 pt-3">
               You are about to change the workspace slug from <strong>{workspace.slug}</strong> to <strong>{pendingSlug}</strong>.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-3 py-2 text-sm text-zinc-300">
+          <div className="space-y-3 py-2 text-sm text-foreground dark:text-zinc-300">
             <p>This action has significant consequences:</p>
-            <ul className="list-disc pl-5 space-y-1 text-zinc-400">
+            <ul className="list-disc pl-5 space-y-1 text-muted-foreground dark:text-zinc-400">
               <li>All existing bookmarks will break.</li>
               <li>Existing invite links might fail if they rely on the URL.</li>
               <li>Your team will need to use the new URL immediately.</li>
             </ul>
           </div>
           <DialogFooter className="mt-4 gap-2 sm:gap-0">
-            <Button variant="outline" onClick={() => setSlugWarningOpen(false)} disabled={isUpdating} className="border-zinc-800 text-zinc-300 hover:bg-zinc-800">
+            <Button variant="outline" onClick={() => setSlugWarningOpen(false)} disabled={isUpdating} className="border-border dark:border-zinc-800 text-foreground dark:text-zinc-300 hover:bg-muted dark:bg-zinc-800">
               Cancel
             </Button>
             <Button variant="destructive" onClick={confirmSlugChange} disabled={isUpdating} className="bg-red-600 hover:bg-red-700">

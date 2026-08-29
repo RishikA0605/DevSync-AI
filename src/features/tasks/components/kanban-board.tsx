@@ -86,7 +86,7 @@ export function KanbanBoard({ projectId, initialTasks, members }: Props) {
       <div className="flex items-center justify-end mb-6">
         <Button
           onClick={() => setIsCreateOpen(true)}
-          className="bg-violet-600 hover:bg-violet-500 text-white gap-2"
+          className="bg-violet-600 hover:bg-violet-500 text-foreground dark:text-white gap-2"
           size="sm"
         >
           <Plus size={15} />

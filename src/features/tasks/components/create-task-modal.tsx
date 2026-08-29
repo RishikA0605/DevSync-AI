@@ -58,18 +58,18 @@ export function CreateTaskModal({ projectId, members, isOpen, onClose, onCreated
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-zinc-900 border-zinc-700 text-zinc-100">
+      <DialogContent className="sm:max-w-md bg-card dark:bg-zinc-900 border-zinc-700 text-foreground dark:text-zinc-100">
         <DialogHeader>
-          <DialogTitle className="text-white">Create Task</DialogTitle>
+          <DialogTitle className="text-foreground dark:text-white">Create Task</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-2">
             <FormField control={form.control} name="title" render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-zinc-300">Title</FormLabel>
+                <FormLabel className="text-foreground dark:text-zinc-300">Title</FormLabel>
                 <FormControl>
                   <Input placeholder="Task title..." disabled={loading}
-                    className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+                    className="bg-muted dark:bg-zinc-800 border-zinc-700 text-foreground dark:text-zinc-100 placeholder:text-muted-foreground dark:text-zinc-500"
                     {...field} />
                 </FormControl>
                 <FormMessage />
@@ -78,16 +78,16 @@ export function CreateTaskModal({ projectId, members, isOpen, onClose, onCreated
             <div className="grid grid-cols-2 gap-4">
               <FormField control={form.control} name="priority" render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-zinc-300">Priority</FormLabel>
+                  <FormLabel className="text-foreground dark:text-zinc-300">Priority</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="bg-zinc-800 border-zinc-700 text-zinc-100">
+                      <SelectTrigger className="bg-muted dark:bg-zinc-800 border-zinc-700 text-foreground dark:text-zinc-100">
                         <SelectValue />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className="bg-zinc-800 border-zinc-700">
+                    <SelectContent className="bg-muted dark:bg-zinc-800 border-zinc-700">
                       {PRIORITIES.map(p => (
-                        <SelectItem key={p.value} value={p.value} className="text-zinc-200">{p.label}</SelectItem>
+                        <SelectItem key={p.value} value={p.value} className="text-foreground dark:text-zinc-200">{p.label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -95,16 +95,16 @@ export function CreateTaskModal({ projectId, members, isOpen, onClose, onCreated
               )} />
               <FormField control={form.control} name="assigneeId" render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-zinc-300">Assignee</FormLabel>
+                  <FormLabel className="text-foreground dark:text-zinc-300">Assignee</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="bg-zinc-800 border-zinc-700 text-zinc-100">
+                      <SelectTrigger className="bg-muted dark:bg-zinc-800 border-zinc-700 text-foreground dark:text-zinc-100">
                         <SelectValue placeholder="Unassigned" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className="bg-zinc-800 border-zinc-700">
+                    <SelectContent className="bg-muted dark:bg-zinc-800 border-zinc-700">
                       {members.map(m => (
-                        <SelectItem key={m.id} value={m.id} className="text-zinc-200">{m.name || "Unknown"}</SelectItem>
+                        <SelectItem key={m.id} value={m.id} className="text-foreground dark:text-zinc-200">{m.name || "Unknown"}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -113,19 +113,19 @@ export function CreateTaskModal({ projectId, members, isOpen, onClose, onCreated
             </div>
             <FormField control={form.control} name="dueDate" render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-zinc-300">Due Date <span className="text-zinc-500">(optional)</span></FormLabel>
+                <FormLabel className="text-foreground dark:text-zinc-300">Due Date <span className="text-muted-foreground dark:text-zinc-500">(optional)</span></FormLabel>
                 <FormControl>
                   <Input type="date" disabled={loading}
-                    className="bg-zinc-800 border-zinc-700 text-zinc-100"
+                    className="bg-muted dark:bg-zinc-800 border-zinc-700 text-foreground dark:text-zinc-100"
                     {...field} />
                 </FormControl>
               </FormItem>
             )} />
             <div className="flex justify-end gap-2 pt-2">
               <Button type="button" variant="ghost" onClick={onClose} disabled={loading}
-                className="text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800">Cancel</Button>
+                className="text-muted-foreground dark:text-zinc-400 hover:text-foreground dark:text-zinc-200 hover:bg-muted dark:bg-zinc-800">Cancel</Button>
               <Button type="submit" disabled={loading}
-                className="bg-violet-600 hover:bg-violet-500 text-white">
+                className="bg-violet-600 hover:bg-violet-500 text-foreground dark:text-white">
                 {loading ? "Creating..." : "Create Task"}
               </Button>
             </div>

@@ -12,7 +12,7 @@ export default async function WorkspaceLayout({
   const workspaces = await getUserWorkspaces();
 
   return (
-    <div className="flex h-screen overflow-hidden bg-zinc-950 text-zinc-800">
+    <div className="flex h-screen overflow-hidden bg-background dark:bg-zinc-950 text-zinc-800">
       <Sidebar workspaceSlug={resolvedParams.slug} workspaces={workspaces} />
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* We can add a generic Header here later if needed */}
