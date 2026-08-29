@@ -79,8 +79,8 @@ export function NotesList({ notes, workspaceSlug }: NotesListProps) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-slate-50/50 dark:bg-zinc-950/50">
-      <div className="p-6 pb-4 border-b flex justify-between items-center bg-white dark:bg-zinc-900 sticky top-0 z-10">
+    <div className="flex flex-col h-full bg-slate-50/50 dark:bg-background dark:bg-zinc-950/50">
+      <div className="p-6 pb-4 border-b flex justify-between items-center bg-white dark:bg-card dark:bg-zinc-900 sticky top-0 z-10">
         <div>
           <h1 className="text-2xl font-bold text-black">Notes</h1>
           <p className="text-muted-foreground text-sm mt-1">
@@ -100,13 +100,13 @@ export function NotesList({ notes, workspaceSlug }: NotesListProps) {
             placeholder="Search notes..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 max-w-md bg-white dark:bg-zinc-900 border-slate-200 dark:border-zinc-800 focus-visible:ring-indigo-500 rounded-xl"
+            className="pl-9 max-w-md bg-white dark:bg-card dark:bg-zinc-900 border-slate-200 dark:border-border dark:border-zinc-800 focus-visible:ring-indigo-500 rounded-xl"
           />
         </div>
 
         {filteredNotes.length === 0 ? (
-          <div className="text-center py-20 border-2 border-dashed rounded-2xl bg-white/50 dark:bg-zinc-900/50">
-            <div className="bg-slate-100 dark:bg-zinc-800 h-12 w-12 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="text-center py-20 border-2 border-dashed rounded-2xl bg-white/50 dark:bg-card dark:bg-zinc-900/50">
+            <div className="bg-slate-100 dark:bg-muted dark:bg-zinc-800 h-12 w-12 rounded-full flex items-center justify-center mx-auto mb-4">
               <FileText className="h-6 w-6 text-slate-500" />
             </div>
             <h3 className="text-lg font-medium">No notes found</h3>
@@ -122,7 +122,7 @@ export function NotesList({ notes, workspaceSlug }: NotesListProps) {
             {filteredNotes.map((note) => (
               <div
                 key={note.id}
-                className="group relative flex flex-col justify-between p-5 rounded-2xl border bg-white dark:bg-zinc-900 shadow-sm hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-900/50 transition-all cursor-pointer overflow-hidden"
+                className="group relative flex flex-col justify-between p-5 rounded-2xl border bg-white dark:bg-card dark:bg-zinc-900 shadow-sm hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-900/50 transition-all cursor-pointer overflow-hidden"
                 onClick={() => router.push(`/workspace/${workspaceSlug}/notes/${note.id}`)}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 to-transparent dark:from-indigo-950/10 opacity-0 group-hover:opacity-100 transition-opacity" />

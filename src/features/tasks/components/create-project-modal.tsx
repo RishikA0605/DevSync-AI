@@ -40,18 +40,18 @@ export function CreateProjectModal({ workspaceId, isOpen, onClose, onCreated }: 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-zinc-900 border-zinc-700 text-zinc-100">
+      <DialogContent className="sm:max-w-md bg-card dark:bg-zinc-900 border-zinc-700 text-foreground dark:text-zinc-100">
         <DialogHeader>
-          <DialogTitle className="text-white">Create Project</DialogTitle>
+          <DialogTitle className="text-foreground dark:text-white">Create Project</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-2">
             <FormField control={form.control} name="name" render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-zinc-300">Project Name</FormLabel>
+                <FormLabel className="text-foreground dark:text-zinc-300">Project Name</FormLabel>
                 <FormControl>
                   <Input placeholder="e.g. Website Redesign" disabled={loading}
-                    className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+                    className="bg-muted dark:bg-zinc-800 border-zinc-700 text-foreground dark:text-zinc-100 placeholder:text-muted-foreground dark:text-zinc-500"
                     {...field} />
                 </FormControl>
                 <FormMessage />
@@ -59,10 +59,10 @@ export function CreateProjectModal({ workspaceId, isOpen, onClose, onCreated }: 
             )} />
             <FormField control={form.control} name="description" render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-zinc-300">Description <span className="text-zinc-500">(optional)</span></FormLabel>
+                <FormLabel className="text-foreground dark:text-zinc-300">Description <span className="text-muted-foreground dark:text-zinc-500">(optional)</span></FormLabel>
                 <FormControl>
                   <Textarea placeholder="What is this project about?" disabled={loading}
-                    className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 resize-none"
+                    className="bg-muted dark:bg-zinc-800 border-zinc-700 text-foreground dark:text-zinc-100 placeholder:text-muted-foreground dark:text-zinc-500 resize-none"
                     rows={3} {...field} />
                 </FormControl>
                 <FormMessage />
@@ -70,11 +70,11 @@ export function CreateProjectModal({ workspaceId, isOpen, onClose, onCreated }: 
             )} />
             <div className="flex justify-end gap-2 pt-2">
               <Button type="button" variant="ghost" onClick={onClose} disabled={loading}
-                className="text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800">
+                className="text-muted-foreground dark:text-zinc-400 hover:text-foreground dark:text-zinc-200 hover:bg-muted dark:bg-zinc-800">
                 Cancel
               </Button>
               <Button type="submit" disabled={loading}
-                className="bg-violet-600 hover:bg-violet-500 text-white">
+                className="bg-violet-600 hover:bg-violet-500 text-foreground dark:text-white">
                 {loading ? "Creating..." : "Create Project"}
               </Button>
             </div>

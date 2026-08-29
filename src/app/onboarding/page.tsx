@@ -44,7 +44,7 @@ export default function OnboardingPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-black p-4">
-      <Card className="w-full max-w-md shadow-lg border-zinc-200 dark:border-zinc-800">
+      <Card className="w-full max-w-md shadow-lg border-zinc-200 dark:border-border dark:border-zinc-800">
         <CardHeader className="space-y-2 text-center pb-6">
           <CardTitle className="text-3xl font-bold tracking-tight">Welcome to DevSync AI</CardTitle>
           <CardDescription className="text-base">

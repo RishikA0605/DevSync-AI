@@ -79,7 +79,7 @@ export function FileUploadButton({
           <Button 
             onClick={() => open()} 
             disabled={isSaving}
-            className={`bg-violet-600 hover:bg-violet-700 text-white ${className || ""}`}
+            className={`bg-violet-600 hover:bg-violet-700 text-foreground dark:text-white ${className || ""}`}
           >
             <UploadCloud className="h-4 w-4 mr-2" />
             {isSaving ? "Saving..." : "Upload File"}

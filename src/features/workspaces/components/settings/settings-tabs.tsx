@@ -48,11 +48,11 @@ export function SettingsTabs({ workspace, currentMember, members, invites, works
               className={cn(
                 "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all",
                 isActive
-                  ? "bg-zinc-800 text-white"
-                  : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
+                  ? "bg-muted dark:bg-zinc-800 text-foreground dark:text-white"
+                  : "text-muted-foreground dark:text-zinc-400 hover:text-foreground dark:text-zinc-200 hover:bg-muted dark:bg-zinc-800/50"
               )}
             >
-              <tab.icon className={cn("h-4 w-4", isActive ? "text-violet-400" : "text-zinc-500")} />
+              <tab.icon className={cn("h-4 w-4", isActive ? "text-violet-400" : "text-muted-foreground dark:text-zinc-500")} />
               {tab.label}
             </button>
           );

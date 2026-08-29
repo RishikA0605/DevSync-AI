@@ -147,19 +147,19 @@ export function ChatWindow({
   }
 
   return (
-    <div className="flex flex-col h-full bg-zinc-950">
+    <div className="flex flex-col h-full bg-background dark:bg-zinc-950">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800/60 shrink-0">
+      <div className="flex items-center justify-between px-6 py-4 border-b border-border dark:border-border dark:border-zinc-800/60 shrink-0">
         <div className="flex items-center gap-3">
           <div className="h-8 w-8 rounded-lg bg-violet-500/15 border border-violet-500/30 flex items-center justify-center">
             <Sparkles size={16} className="text-violet-400" />
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-white">DevSync AI</h2>
-            <p className="text-xs text-zinc-500">{workspaceName}</p>
+            <h2 className="text-sm font-semibold text-foreground dark:text-white">DevSync AI</h2>
+            <p className="text-xs text-muted-foreground dark:text-zinc-500">{workspaceName}</p>
           </div>
         </div>
-        <div className="flex items-center gap-1.5 text-[11px] text-zinc-500 bg-zinc-900 border border-zinc-800 px-2.5 py-1 rounded-full">
+        <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground dark:text-zinc-500 bg-card dark:bg-zinc-900 border border-border dark:border-zinc-800 px-2.5 py-1 rounded-full">
           <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
           {projectCount} projects · {taskCount} tasks
         </div>
@@ -170,10 +170,10 @@ export function ChatWindow({
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-12">
             <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-violet-600 to-blue-600 flex items-center justify-center mb-6 shadow-xl shadow-violet-500/20">
-              <Bot size={36} className="text-white" />
+              <Bot size={36} className="text-foreground dark:text-white" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">What can I help with?</h3>
-            <p className="text-sm text-zinc-400 max-w-sm">
+            <h3 className="text-xl font-bold text-foreground dark:text-white mb-2">What can I help with?</h3>
+            <p className="text-sm text-muted-foreground dark:text-zinc-400 max-w-sm">
               I have full context of your workspace — projects, tasks, and team members. Ask me anything!
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-6 w-full max-w-md">
@@ -186,7 +186,7 @@ export function ChatWindow({
                 <button
                   key={prompt}
                   onClick={() => { setInput(prompt); }}
-                  className="text-left text-xs text-zinc-400 bg-zinc-900/50 border border-zinc-800 hover:border-violet-500/50 hover:text-zinc-200 rounded-xl px-4 py-3 transition-all"
+                  className="text-left text-xs text-muted-foreground dark:text-zinc-400 bg-card dark:bg-zinc-900/50 border border-border dark:border-zinc-800 hover:border-violet-500/50 hover:text-foreground dark:text-zinc-200 rounded-xl px-4 py-3 transition-all"
                 >
                   {prompt}
                 </button>
@@ -208,11 +208,11 @@ export function ChatWindow({
                   "h-7 w-7 rounded-lg flex items-center justify-center shrink-0",
                   message.role === "user"
                     ? "bg-violet-600"
-                    : "bg-zinc-800 border border-zinc-700"
+                    : "bg-muted dark:bg-zinc-800 border border-zinc-700"
                 )}
               >
                 {message.role === "user"
-                  ? <User size={14} className="text-white" />
+                  ? <User size={14} className="text-foreground dark:text-white" />
                   : <Bot size={14} className="text-violet-400" />
                 }
               </div>
@@ -222,8 +222,8 @@ export function ChatWindow({
                 className={cn(
                   "max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed",
                   message.role === "user"
-                    ? "bg-violet-600 text-white rounded-tr-sm"
-                    : "bg-zinc-900 border border-zinc-800 text-zinc-200 rounded-tl-sm"
+                    ? "bg-violet-600 text-foreground dark:text-white rounded-tr-sm"
+                    : "bg-card dark:bg-zinc-900 border border-border dark:border-zinc-800 text-foreground dark:text-zinc-200 rounded-tl-sm"
                 )}
               >
                 {message.content ? (
@@ -243,7 +243,7 @@ export function ChatWindow({
       </div>
 
       {/* Input */}
-      <div className="shrink-0 px-6 pb-6 pt-4 border-t border-zinc-800/60">
+      <div className="shrink-0 px-6 pb-6 pt-4 border-t border-border dark:border-border dark:border-zinc-800/60">
         <form onSubmit={handleSubmit} className="flex gap-3 items-end">
           <Textarea
             value={input}
@@ -252,12 +252,12 @@ export function ChatWindow({
             placeholder="Ask anything about your workspace..."
             disabled={isLoading}
             rows={1}
-            className="flex-1 resize-none bg-zinc-900 border-zinc-700 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500/50 min-h-[44px] max-h-[200px] rounded-xl"
+            className="flex-1 resize-none bg-card dark:bg-zinc-900 border-zinc-700 text-foreground dark:text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500/50 min-h-[44px] max-h-[200px] rounded-xl"
           />
           <Button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="bg-violet-600 hover:bg-violet-500 text-white h-11 w-11 p-0 rounded-xl shrink-0"
+            className="bg-violet-600 hover:bg-violet-500 text-foreground dark:text-white h-11 w-11 p-0 rounded-xl shrink-0"
           >
             {isLoading
               ? <Loader2 size={16} className="animate-spin" />

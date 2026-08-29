@@ -34,7 +34,7 @@ export function WorkspaceSwitcher({ workspaces, activeSlug, isCollapsed }: Works
           <div
             role="button"
             className={cn(
-              "flex items-center gap-2.5 flex-1 min-w-0 p-1.5 rounded-lg hover:bg-zinc-800/60 cursor-pointer transition-colors",
+              "flex items-center gap-2.5 flex-1 min-w-0 p-1.5 rounded-lg hover:bg-muted dark:bg-muted dark:bg-zinc-800/60 cursor-pointer transition-colors",
               isCollapsed && "justify-center px-0"
             )}
           >
@@ -43,22 +43,22 @@ export function WorkspaceSwitcher({ workspaces, activeSlug, isCollapsed }: Works
                 <AvatarImage src={activeWorkspace.logo} alt={activeWorkspace.name} />
               ) : (
                 <AvatarFallback className="rounded-lg bg-gradient-to-br from-violet-500 to-blue-600">
-                  <Sparkles className="h-3.5 w-3.5 text-white" />
+                  <Sparkles className="h-3.5 w-3.5 text-foreground dark:text-white" />
                 </AvatarFallback>
               )}
             </Avatar>
             {!isCollapsed && (
               <>
-                <span className="text-sm font-semibold text-white truncate capitalize flex-1 text-left">
+                <span className="text-sm font-semibold text-foreground dark:text-white truncate capitalize flex-1 text-left">
                   {activeWorkspace?.name || activeSlug}
                 </span>
-                <ChevronsUpDown className="h-4 w-4 text-zinc-500 shrink-0" />
+                <ChevronsUpDown className="h-4 w-4 text-muted-foreground dark:text-zinc-500 shrink-0" />
               </>
             )}
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-60 bg-zinc-950 border-zinc-800 text-zinc-200">
-          <div className="px-2 py-1.5 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+        <DropdownMenuContent align="start" className="w-60 bg-background dark:bg-zinc-950 border-border dark:border-zinc-800 text-foreground dark:text-zinc-200">
+          <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground dark:text-zinc-500 uppercase tracking-wider">
             Workspaces
           </div>
           {workspaces.map((workspace) => (
@@ -82,13 +82,13 @@ export function WorkspaceSwitcher({ workspaces, activeSlug, isCollapsed }: Works
               )}
             </DropdownMenuItem>
           ))}
-          <DropdownMenuSeparator className="bg-zinc-800" />
+          <DropdownMenuSeparator className="bg-muted dark:bg-zinc-800" />
           <DropdownMenuItem
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 text-zinc-300"
+            className="flex items-center gap-2 text-foreground dark:text-zinc-300"
           >
-            <div className="h-6 w-6 rounded-md bg-zinc-800 flex items-center justify-center">
-              <Plus className="h-4 w-4 text-white" />
+            <div className="h-6 w-6 rounded-md bg-muted dark:bg-zinc-800 flex items-center justify-center">
+              <Plus className="h-4 w-4 text-foreground dark:text-white" />
             </div>
             <span>Create Workspace</span>
           </DropdownMenuItem>

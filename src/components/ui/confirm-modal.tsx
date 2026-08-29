@@ -24,26 +24,26 @@ const variantStyles = {
   danger: {
     iconWrapper: "bg-red-500/10 border border-red-500/20",
     icon: <AlertTriangle className="h-6 w-6 text-red-500" />,
-    titleClass: "text-white",
+    titleClass: "text-foreground dark:text-white",
     accentLine: "bg-red-600",
-    btnClass: "bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-900/30",
-    dialogBorder: "border-zinc-800",
+    btnClass: "bg-red-600 hover:bg-red-500 text-foreground dark:text-white shadow-lg shadow-red-900/30",
+    dialogBorder: "border-border dark:border-zinc-800",
   },
   warning: {
     iconWrapper: "bg-amber-500/10 border border-amber-500/20",
     icon: <LogOut className="h-6 w-6 text-amber-400" />,
-    titleClass: "text-white",
+    titleClass: "text-foreground dark:text-white",
     accentLine: "bg-amber-500",
-    btnClass: "bg-amber-600 hover:bg-amber-500 text-white shadow-lg shadow-amber-900/30",
-    dialogBorder: "border-zinc-800",
+    btnClass: "bg-amber-600 hover:bg-amber-500 text-foreground dark:text-white shadow-lg shadow-amber-900/30",
+    dialogBorder: "border-border dark:border-zinc-800",
   },
   info: {
     iconWrapper: "bg-blue-500/10 border border-blue-500/20",
     icon: <Info className="h-6 w-6 text-blue-400" />,
-    titleClass: "text-white",
+    titleClass: "text-foreground dark:text-white",
     accentLine: "bg-blue-500",
-    btnClass: "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/30",
-    dialogBorder: "border-zinc-800",
+    btnClass: "bg-blue-600 hover:bg-blue-500 text-foreground dark:text-white shadow-lg shadow-blue-900/30",
+    dialogBorder: "border-border dark:border-zinc-800",
   },
 };
 
@@ -64,7 +64,7 @@ export function ConfirmModal({
     <Dialog open={open} onOpenChange={isLoading ? undefined : onOpenChange}>
       <DialogContent
         className={cn(
-          "sm:max-w-[400px] p-0 overflow-hidden bg-zinc-950 gap-0",
+          "sm:max-w-[400px] p-0 overflow-hidden bg-background dark:bg-zinc-950 gap-0",
           s.dialogBorder
         )}
       >
@@ -82,14 +82,14 @@ export function ConfirmModal({
               <h2 className={cn("text-base font-semibold leading-snug", s.titleClass)}>
                 {title}
               </h2>
-              <p className="text-sm text-zinc-400 mt-1.5 leading-relaxed">
+              <p className="text-sm text-muted-foreground dark:text-zinc-400 mt-1.5 leading-relaxed">
                 {description}
               </p>
             </div>
           </div>
 
           {/* Divider */}
-          <div className="h-px bg-zinc-800/70" />
+          <div className="h-px bg-muted dark:bg-zinc-800/70" />
 
           {/* Actions */}
           <div className="flex items-center justify-end gap-3">
@@ -97,7 +97,7 @@ export function ConfirmModal({
               variant="ghost"
               onClick={() => onOpenChange(false)}
               disabled={isLoading}
-              className="h-9 px-4 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800"
+              className="h-9 px-4 text-muted-foreground dark:text-zinc-400 hover:text-foreground dark:text-zinc-100 hover:bg-muted dark:bg-zinc-800"
             >
               {cancelLabel}
             </Button>

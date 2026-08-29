@@ -12,7 +12,7 @@ const typeConfig = {
   TASK_STATUS_CHANGED: { icon: CheckSquare, color: "text-blue-400" },
   MENTION: { icon: AtSign, color: "text-emerald-400" },
   WORKSPACE_JOINED: { icon: UserPlus, color: "text-amber-400" },
-  SYSTEM: { icon: Settings, color: "text-zinc-400" },
+  SYSTEM: { icon: Settings, color: "text-muted-foreground dark:text-zinc-400" },
 } as const;
 
 interface NotificationItemProps {
@@ -27,8 +27,8 @@ export function NotificationItem({ notification, onRead }: NotificationItemProps
   const content = (
     <div
       className={cn(
-        "flex items-start gap-3 p-3 rounded-lg cursor-pointer transition-colors hover:bg-zinc-800/60",
-        !notification.isRead && "bg-zinc-800/40"
+        "flex items-start gap-3 p-3 rounded-lg cursor-pointer transition-colors hover:bg-muted dark:bg-muted dark:bg-zinc-800/60",
+        !notification.isRead && "bg-muted dark:bg-zinc-800/40"
       )}
       onClick={() => !notification.isRead && onRead(notification.id)}
     >
@@ -42,12 +42,12 @@ export function NotificationItem({ notification, onRead }: NotificationItemProps
       {notification.actor ? (
         <Avatar className="h-8 w-8 shrink-0 border border-zinc-700">
           <AvatarImage src={notification.actor.image || ""} />
-          <AvatarFallback className="text-xs bg-zinc-800 text-zinc-300">
+          <AvatarFallback className="text-xs bg-muted dark:bg-zinc-800 text-foreground dark:text-zinc-300">
             {notification.actor.name?.charAt(0) || "?"}
           </AvatarFallback>
         </Avatar>
       ) : (
-        <div className="h-8 w-8 shrink-0 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center">
+        <div className="h-8 w-8 shrink-0 rounded-full bg-muted dark:bg-zinc-800 border border-zinc-700 flex items-center justify-center">
           <Icon size={14} className={config.color} />
         </div>
       )}
@@ -56,11 +56,11 @@ export function NotificationItem({ notification, onRead }: NotificationItemProps
       <div className="flex-1 min-w-0">
         <p className={cn(
           "text-sm leading-snug",
-          notification.isRead ? "text-zinc-400" : "text-zinc-100"
+          notification.isRead ? "text-muted-foreground dark:text-zinc-400" : "text-foreground dark:text-zinc-100"
         )}>
           {notification.content}
         </p>
-        <p className="text-xs text-zinc-500 mt-1">
+        <p className="text-xs text-muted-foreground dark:text-zinc-500 mt-1">
           {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
         </p>
       </div>

@@ -19,7 +19,7 @@ export type TaskCardData = {
 };
 
 const PRIORITY_STYLES: Record<string, { badge: string; dot: string }> = {
-  LOW:    { badge: "bg-zinc-700 text-zinc-300 border-zinc-600", dot: "bg-zinc-400" },
+  LOW:    { badge: "bg-zinc-700 text-foreground dark:text-zinc-300 border-zinc-600", dot: "bg-zinc-400" },
   MEDIUM: { badge: "bg-blue-950 text-blue-300 border-blue-800", dot: "bg-blue-400" },
   HIGH:   { badge: "bg-amber-950 text-amber-300 border-amber-800", dot: "bg-amber-400" },
   URGENT: { badge: "bg-red-950 text-red-300 border-red-800", dot: "bg-red-400" },
@@ -43,7 +43,7 @@ export function TaskCard({ task, onClick }: Props) {
       ref={setNodeRef}
       style={style}
       className={cn(
-        "group rounded-xl border bg-zinc-900/80 border-zinc-800 p-3.5 cursor-pointer hover:border-zinc-600 transition-all duration-150 space-y-3",
+        "group rounded-xl border bg-card dark:bg-zinc-900/80 border-border dark:border-zinc-800 p-3.5 cursor-pointer hover:border-zinc-600 transition-all duration-150 space-y-3",
         isDragging && "opacity-40 scale-95 border-violet-500/50 shadow-lg shadow-violet-500/10"
       )}
       onClick={() => onClick(task)}
@@ -55,11 +55,11 @@ export function TaskCard({ task, onClick }: Props) {
             {...attributes}
             {...listeners}
             onClick={e => e.stopPropagation()}
-            className="text-zinc-600 hover:text-zinc-400 cursor-grab active:cursor-grabbing shrink-0 -ml-1"
+            className="text-zinc-600 hover:text-muted-foreground dark:text-zinc-400 cursor-grab active:cursor-grabbing shrink-0 -ml-1"
           >
             <GripVertical size={15} />
           </div>
-          <p className="text-sm font-medium text-zinc-100 leading-snug line-clamp-2">{task.title}</p>
+          <p className="text-sm font-medium text-foreground dark:text-zinc-100 leading-snug line-clamp-2">{task.title}</p>
         </div>
         <Badge className={cn("text-[10px] px-1.5 py-0.5 border shrink-0 font-medium", priorityStyle.badge)}>
           {task.priority}
@@ -71,14 +71,14 @@ export function TaskCard({ task, onClick }: Props) {
         <div className="flex items-center gap-2">
           {/* Due date */}
           {task.dueDate && (
-            <div className={cn("flex items-center gap-1 text-[11px]", isOverdue ? "text-red-400" : "text-zinc-500")}>
+            <div className={cn("flex items-center gap-1 text-[11px]", isOverdue ? "text-red-400" : "text-muted-foreground dark:text-zinc-500")}>
               <Calendar size={11} />
               <span>{new Date(task.dueDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
             </div>
           )}
           {/* Comments */}
           {task.comments.length > 0 && (
-            <div className="flex items-center gap-1 text-[11px] text-zinc-500">
+            <div className="flex items-center gap-1 text-[11px] text-muted-foreground dark:text-zinc-500">
               <MessageSquare size={11} />
               <span>{task.comments.length}</span>
             </div>

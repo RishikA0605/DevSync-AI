@@ -62,7 +62,7 @@ export function NoteEditor({ noteId, token, isReadOnly, currentUser }: NoteEdito
   return (
     <div className="flex flex-col h-full">
       {/* Status Bar */}
-      <div className="flex items-center justify-between px-6 py-2 border-b border-slate-100 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+      <div className="flex items-center justify-between px-6 py-2 border-b border-slate-100 dark:border-border dark:border-zinc-800 bg-white dark:bg-card dark:bg-zinc-900">
         <span className="text-xs text-slate-500 dark:text-slate-400">
           {isReadOnly ? "👁 View only — you don't have edit access" : "Click anywhere to start writing"}
         </span>
@@ -95,7 +95,7 @@ export function NoteEditor({ noteId, token, isReadOnly, currentUser }: NoteEdito
       </div>
 
       {/* Editor Area */}
-      <div className="flex-1 overflow-y-auto bg-white dark:bg-zinc-950">
+      <div className="flex-1 overflow-y-auto bg-white dark:bg-background dark:bg-zinc-950">
         <div className="max-w-4xl mx-auto px-4 py-10">
           <BlockNoteView
             editor={editor as any}

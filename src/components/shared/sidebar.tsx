@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { UserButton } from "@/components/shared/user-button";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { NotificationBell } from "@/features/notifications/components/notification-bell";
 import { WorkspaceSwitcher } from "@/features/workspaces/components/workspace-switcher";
 import { Workspace } from "@prisma/client";
@@ -41,18 +42,18 @@ export function Sidebar({ workspaceSlug, workspaces }: { workspaceSlug: string, 
   return (
     <div
       className={cn(
-        "relative flex flex-col bg-zinc-950 border-r border-zinc-800/60 transition-all duration-300 ease-in-out",
+        "relative flex flex-col bg-card dark:bg-zinc-950 border-r border-border dark:border-zinc-800/60 transition-all duration-300 ease-in-out",
         isCollapsed ? "w-[60px]" : "w-[220px]"
       )}
     >
       {/* Logo / Workspace Header */}
-      <div className="flex h-14 items-center px-2 border-b border-zinc-800/60 shrink-0">
+      <div className="flex h-14 items-center px-2 border-b border-border dark:border-border dark:border-zinc-800/60 shrink-0">
         <WorkspaceSwitcher workspaces={workspaces} activeSlug={workspaceSlug} isCollapsed={isCollapsed} />
 
         <Button
           variant="ghost"
           size="icon"
-          className="h-7 w-7 shrink-0 text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800"
+          className="h-7 w-7 shrink-0 text-zinc-600 hover:text-foreground dark:text-zinc-300 hover:bg-muted dark:bg-zinc-800"
           onClick={() => setIsCollapsed(!isCollapsed)}
         >
           {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
@@ -73,14 +74,14 @@ export function Sidebar({ workspaceSlug, workspaces }: { workspaceSlug: string, 
                 "group flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm font-medium transition-all duration-150",
                 isCollapsed ? "justify-center" : "",
                 isActive
-                  ? "bg-zinc-800 text-white"
-                  : "text-zinc-500 hover:bg-zinc-800/60 hover:text-zinc-200"
+                  ? "bg-muted dark:bg-zinc-800 text-foreground dark:text-white"
+                  : "text-muted-foreground dark:text-zinc-500 hover:bg-muted dark:bg-muted dark:bg-zinc-800/60 hover:text-foreground dark:text-zinc-200"
               )}
             >
               <item.icon className={cn(
                 "shrink-0 transition-colors",
                 isCollapsed ? "h-5 w-5" : "h-4 w-4",
-                isActive ? "text-violet-400" : "text-zinc-500 group-hover:text-zinc-300"
+                isActive ? "text-violet-400" : "text-muted-foreground dark:text-zinc-500 group-hover:text-foreground dark:text-zinc-300"
               )} />
               {!isCollapsed && <span>{item.title}</span>}
               {!isCollapsed && isActive && (
@@ -92,13 +93,13 @@ export function Sidebar({ workspaceSlug, workspaces }: { workspaceSlug: string, 
       </div>
 
       {/* Bottom: User + Settings + Invite */}
-      <div className="p-2 border-t border-zinc-800/60 shrink-0 space-y-2">
+      <div className="p-2 border-t border-border dark:border-border dark:border-zinc-800/60 shrink-0 space-y-2">
 
         {/* Invite Members */}
         <Link
           href={`/workspace/${workspaceSlug}/settings`}
           className={cn(
-            "flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-medium transition-all duration-150 text-zinc-500 hover:bg-zinc-800/60 hover:text-zinc-200",
+            "flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-medium transition-all duration-150 text-muted-foreground dark:text-zinc-500 hover:bg-muted dark:bg-muted dark:bg-zinc-800/60 hover:text-foreground dark:text-zinc-200",
             isCollapsed ? "justify-center" : ""
           )}
           title={isCollapsed ? "Invite Members" : undefined}
@@ -106,6 +107,9 @@ export function Sidebar({ workspaceSlug, workspaces }: { workspaceSlug: string, 
           <UserPlus className={cn("shrink-0 text-violet-400", isCollapsed ? "h-5 w-5" : "h-4 w-4")} />
           {!isCollapsed && <span>Invite Members</span>}
         </Link>
+
+        {/* Theme Toggle */}
+        <ThemeToggle isCollapsed={isCollapsed} />
 
         <div className={cn("flex items-center gap-2", isCollapsed ? "justify-center" : "")}>
           <UserButton />
@@ -117,7 +121,7 @@ export function Sidebar({ workspaceSlug, workspaces }: { workspaceSlug: string, 
               <NotificationBell />
               <Link
                 href={`/workspace/${workspaceSlug}/settings`}
-                className="p-1.5 rounded-lg text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800 transition-colors"
+                className="p-1.5 rounded-lg text-zinc-600 hover:text-foreground dark:text-zinc-300 hover:bg-muted dark:bg-zinc-800 transition-colors"
               >
                 <Settings size={15} />
               </Link>

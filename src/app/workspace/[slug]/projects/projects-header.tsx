@@ -13,12 +13,12 @@ export function ProjectsHeader({ workspaceId }: { workspaceId: string }) {
   return (
     <div className="flex items-center justify-between">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-white">Projects</h1>
-        <p className="text-zinc-400 mt-1">Manage your team's projects and tasks.</p>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground dark:text-white">Projects</h1>
+        <p className="text-muted-foreground dark:text-zinc-400 mt-1">Manage your team's projects and tasks.</p>
       </div>
       <Button 
         onClick={() => setIsModalOpen(true)}
-        className="bg-violet-600 hover:bg-violet-500 text-white gap-2"
+        className="bg-violet-600 hover:bg-violet-500 text-foreground dark:text-white gap-2"
       >
         <Plus size={16} />
         New Project

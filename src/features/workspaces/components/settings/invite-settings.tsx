@@ -76,27 +76,27 @@ export function InviteSettings({ workspace, invites }: { workspace: Workspace, i
 
   return (
     <div className="space-y-6">
-      <Card className="border-zinc-800/60 bg-zinc-900/40 backdrop-blur-sm">
+      <Card className="border-border dark:border-border dark:border-zinc-800/60 bg-card dark:bg-zinc-900/40 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle className="text-xl text-white">Invite Links</CardTitle>
-          <CardDescription className="text-zinc-400 mt-1">
+          <CardTitle className="text-xl text-foreground dark:text-white">Invite Links</CardTitle>
+          <CardDescription className="text-muted-foreground dark:text-zinc-400 mt-1">
             Manage active invite links for this workspace.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
 
           {/* Create New Invite Section */}
-          <div className="flex items-center gap-3 bg-zinc-950/50 p-4 rounded-lg border border-zinc-800/60">
+          <div className="flex items-center gap-3 bg-background dark:bg-zinc-950/50 p-4 rounded-lg border border-border dark:border-border dark:border-zinc-800/60">
             <div className="flex-1">
-              <h4 className="text-sm font-medium text-white">Generate new link</h4>
-              <p className="text-xs text-zinc-500 mt-0.5">Create a link to share with your team</p>
+              <h4 className="text-sm font-medium text-foreground dark:text-white">Generate new link</h4>
+              <p className="text-xs text-muted-foreground dark:text-zinc-500 mt-0.5">Create a link to share with your team</p>
             </div>
 
             <Select value={expiryDays} onValueChange={setExpiryDays} disabled={isCreating}>
-              <SelectTrigger className="w-[140px] h-9 bg-zinc-900 border-zinc-800 text-xs text-zinc-300">
+              <SelectTrigger className="w-[140px] h-9 bg-card dark:bg-zinc-900 border-border dark:border-zinc-800 text-xs text-foreground dark:text-zinc-300">
                 <SelectValue placeholder="Expiration" />
               </SelectTrigger>
-              <SelectContent className="bg-zinc-950 border-zinc-800 text-zinc-300">
+              <SelectContent className="bg-background dark:bg-zinc-950 border-border dark:border-zinc-800 text-foreground dark:text-zinc-300">
                 <SelectItem value="1">Expires in 1 day</SelectItem>
                 <SelectItem value="7">Expires in 7 days</SelectItem>
                 <SelectItem value="30">Expires in 30 days</SelectItem>
@@ -108,24 +108,24 @@ export function InviteSettings({ workspace, invites }: { workspace: Workspace, i
               onClick={handleCreateInvite}
               disabled={isCreating}
               size="sm"
-              className="h-9 bg-violet-600 hover:bg-violet-700 text-white gap-2"
+              className="h-9 bg-violet-600 hover:bg-violet-700 text-foreground dark:text-white gap-2"
             >
               {isCreating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
               Generate Link
             </Button>
           </div>
 
-          <div className="w-full h-px bg-zinc-800/60" />
+          <div className="w-full h-px bg-muted dark:bg-muted dark:bg-zinc-800/60" />
 
           {/* Active Invites List */}
           <div>
-            <h4 className="text-sm font-medium text-white mb-4">Active Links ({invites.length})</h4>
+            <h4 className="text-sm font-medium text-foreground dark:text-white mb-4">Active Links ({invites.length})</h4>
 
             {invites.length === 0 ? (
-              <div className="text-center py-8 border border-dashed border-zinc-800/80 rounded-lg bg-zinc-950/30">
+              <div className="text-center py-8 border border-dashed border-border dark:border-border dark:border-zinc-800/80 rounded-lg bg-background dark:bg-zinc-950/30">
                 <LinkIcon className="h-8 w-8 text-zinc-600 mx-auto mb-3" />
-                <p className="text-sm text-zinc-400 font-medium">No active invite links</p>
-                <p className="text-xs text-zinc-500 mt-1">Generate a link above to invite members.</p>
+                <p className="text-sm text-muted-foreground dark:text-zinc-400 font-medium">No active invite links</p>
+                <p className="text-xs text-muted-foreground dark:text-zinc-500 mt-1">Generate a link above to invite members.</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -133,13 +133,13 @@ export function InviteSettings({ workspace, invites }: { workspace: Workspace, i
                   const isCopied = copiedId === invite.id;
 
                   return (
-                    <div key={invite.id} className="flex items-center justify-between p-4 rounded-lg border border-zinc-800/60 bg-zinc-950/50">
+                    <div key={invite.id} className="flex items-center justify-between p-4 rounded-lg border border-border dark:border-border dark:border-zinc-800/60 bg-background dark:bg-zinc-950/50">
                       <div className="flex items-start gap-4">
-                        <Avatar className="h-8 w-8 border border-zinc-800 mt-1">
+                        <Avatar className="h-8 w-8 border border-border dark:border-zinc-800 mt-1">
                           {invite.createdBy.image ? (
                             <AvatarImage src={invite.createdBy.image} />
                           ) : (
-                            <AvatarFallback className="bg-zinc-800 text-xs text-zinc-300">
+                            <AvatarFallback className="bg-muted dark:bg-zinc-800 text-xs text-foreground dark:text-zinc-300">
                               {invite.createdBy.name?.charAt(0)}
                             </AvatarFallback>
                           )}
@@ -147,7 +147,7 @@ export function InviteSettings({ workspace, invites }: { workspace: Workspace, i
 
                         <div>
                           <div className="flex items-center gap-2 flex-wrap">
-                            <p className="text-sm font-medium text-white">Created by {invite.createdBy.name}</p>
+                            <p className="text-sm font-medium text-foreground dark:text-white">Created by {invite.createdBy.name}</p>
                             {invite.expiresAt ? (
                               <Badge variant="outline" className="text-[10px] h-5 border-amber-500/30 text-amber-400 bg-amber-500/10 font-normal">
                                 Expires {formatDistanceToNow(new Date(invite.expiresAt), { addSuffix: true })}
@@ -159,7 +159,7 @@ export function InviteSettings({ workspace, invites }: { workspace: Workspace, i
                             )}
                           </div>
                           <div className="flex items-center gap-2 mt-2">
-                            <code className="text-xs bg-zinc-900 px-2 py-1 rounded text-zinc-400 font-mono border border-zinc-800">
+                            <code className="text-xs bg-card dark:bg-zinc-900 px-2 py-1 rounded text-muted-foreground dark:text-zinc-400 font-mono border border-border dark:border-zinc-800">
                               /invite?token={invite.token.substring(0, 12)}...
                             </code>
                           </div>
@@ -170,7 +170,7 @@ export function InviteSettings({ workspace, invites }: { workspace: Workspace, i
                         <Button
                           variant="secondary"
                           size="sm"
-                          className="h-8 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 hover:text-white transition-all"
+                          className="h-8 bg-muted dark:bg-zinc-800 text-foreground dark:text-zinc-300 hover:bg-zinc-700 hover:text-foreground dark:text-white transition-all"
                           onClick={() => copyToClipboard(invite.token, invite.id)}
                         >
                           {isCopied ? (
@@ -182,7 +182,7 @@ export function InviteSettings({ workspace, invites }: { workspace: Workspace, i
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-zinc-500 hover:text-red-400 hover:bg-red-400/10"
+                          className="h-8 w-8 text-muted-foreground dark:text-zinc-500 hover:text-red-400 hover:bg-red-400/10"
                           onClick={() => setRevokeModal({ open: true, inviteId: invite.id })}
                           title="Revoke Link"
                         >

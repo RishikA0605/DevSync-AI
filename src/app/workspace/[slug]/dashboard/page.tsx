@@ -92,28 +92,28 @@ export default async function WorkspaceDashboardPage({
   };
 
   const priorityColors: Record<string, string> = {
-    LOW: "text-zinc-500",
+    LOW: "text-muted-foreground dark:text-zinc-500",
     MEDIUM: "text-amber-400",
     HIGH: "text-orange-400",
     URGENT: "text-red-400",
   };
 
   return (
-    <div className="min-h-full bg-zinc-950 text-zinc-100">
+    <div className="min-h-full bg-background dark:bg-zinc-950 text-foreground dark:text-zinc-100">
       {/* Hero Header */}
-      <div className="relative overflow-hidden border-b border-zinc-800/60">
+      <div className="relative overflow-hidden border-b border-border dark:border-border dark:border-zinc-800/60">
         <div className="absolute inset-0 bg-gradient-to-br from-violet-950/40 via-zinc-950 to-blue-950/30 pointer-events-none" />
         <div className="relative px-8 py-10">
           <div className="flex items-start justify-between">
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs text-zinc-400 font-medium tracking-wider uppercase">Live Workspace</span>
+                <span className="text-xs text-muted-foreground dark:text-zinc-400 font-medium tracking-wider uppercase">Live Workspace</span>
               </div>
               <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
                 {workspace.name}
               </h1>
-              <p className="text-zinc-400 mt-2 text-sm">
+              <p className="text-muted-foreground dark:text-zinc-400 mt-2 text-sm">
                 Welcome back, {session.user.name?.split(" ")[0]} 👋 — Here&apos;s what&apos;s happening today.
               </p>
             </div>
@@ -121,7 +121,7 @@ export default async function WorkspaceDashboardPage({
               {workspace.members.slice(0, 5).map((m) => (
                 <div
                   key={m.id}
-                  className="h-9 w-9 rounded-full border-2 border-zinc-800 bg-zinc-700 flex items-center justify-center text-xs font-semibold overflow-hidden"
+                  className="h-9 w-9 rounded-full border-2 border-border dark:border-zinc-800 bg-zinc-700 flex items-center justify-center text-xs font-semibold overflow-hidden"
                   title={m.user.name || ""}
                 >
                   {m.user.image ? (
@@ -133,7 +133,7 @@ export default async function WorkspaceDashboardPage({
                 </div>
               ))}
               {workspace.members.length > 5 && (
-                <div className="h-9 w-9 rounded-full border-2 border-zinc-800 bg-zinc-800 flex items-center justify-center text-xs font-medium text-zinc-400">
+                <div className="h-9 w-9 rounded-full border-2 border-border dark:border-zinc-800 bg-muted dark:bg-zinc-800 flex items-center justify-center text-xs font-medium text-muted-foreground dark:text-zinc-400">
                   +{workspace.members.length - 5}
                 </div>
               )}
@@ -148,13 +148,13 @@ export default async function WorkspaceDashboardPage({
           {statCards.map((stat) => (
             <div
               key={stat.label}
-              className="group relative rounded-2xl border border-zinc-800/80 bg-zinc-900/60 p-6 hover:border-zinc-700 transition-all duration-200 backdrop-blur-sm overflow-hidden"
+              className="group relative rounded-2xl border border-border dark:border-border dark:border-zinc-800/80 bg-card dark:bg-card dark:bg-zinc-900/60 p-6 hover:border-zinc-700 transition-all duration-200 backdrop-blur-sm overflow-hidden"
             >
               <div className={`absolute inset-0 rounded-2xl transition-opacity duration-300 bg-gradient-to-br ${stat.color} opacity-[0.04] group-hover:opacity-[0.09]`} />
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-xs text-zinc-500 font-medium tracking-wide uppercase">{stat.label}</p>
-                  <p className="text-3xl font-bold text-white mt-2">{stat.value}</p>
+                  <p className="text-xs text-muted-foreground dark:text-zinc-500 font-medium tracking-wide uppercase">{stat.label}</p>
+                  <p className="text-3xl font-bold text-foreground dark:text-white mt-2">{stat.value}</p>
                   <p className={`text-xs mt-1 ${stat.textColor}`}>{stat.desc}</p>
                 </div>
                 <div className={`p-2.5 rounded-xl ${stat.bg}`}>
@@ -168,11 +168,11 @@ export default async function WorkspaceDashboardPage({
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Quick Actions */}
           <div className="lg:col-span-1">
-            <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/60 overflow-hidden backdrop-blur-sm">
-              <div className="px-6 py-4 border-b border-zinc-800/60">
+            <div className="rounded-2xl border border-border dark:border-border dark:border-zinc-800/80 bg-card dark:bg-card dark:bg-zinc-900/60 overflow-hidden backdrop-blur-sm">
+              <div className="px-6 py-4 border-b border-border dark:border-border dark:border-zinc-800/60">
                 <div className="flex items-center gap-2">
                   <Zap className="h-4 w-4 text-amber-400" />
-                  <h2 className="text-sm font-semibold text-white">Quick Actions</h2>
+                  <h2 className="text-sm font-semibold text-foreground dark:text-white">Quick Actions</h2>
                 </div>
               </div>
               <div className="p-3 space-y-1">
@@ -180,16 +180,16 @@ export default async function WorkspaceDashboardPage({
                   <a
                     key={action.label}
                     href={action.href}
-                    className="group flex items-center gap-4 rounded-xl px-3 py-3 hover:bg-zinc-800/60 transition-colors"
+                    className="group flex items-center gap-4 rounded-xl px-3 py-3 hover:bg-muted dark:bg-muted dark:bg-zinc-800/60 transition-colors"
                   >
-                    <div className="h-9 w-9 rounded-lg bg-zinc-800 group-hover:bg-zinc-700 flex items-center justify-center transition-colors shrink-0">
-                      <action.icon className="h-4 w-4 text-zinc-400 group-hover:text-white transition-colors" />
+                    <div className="h-9 w-9 rounded-lg bg-muted dark:bg-zinc-800 group-hover:bg-zinc-700 flex items-center justify-center transition-colors shrink-0">
+                      <action.icon className="h-4 w-4 text-muted-foreground dark:text-zinc-400 group-hover:text-foreground dark:text-white transition-colors" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-zinc-200 group-hover:text-white">{action.label}</p>
-                      <p className="text-xs text-zinc-500">{action.desc}</p>
+                      <p className="text-sm font-medium text-foreground dark:text-zinc-200 group-hover:text-foreground dark:text-white">{action.label}</p>
+                      <p className="text-xs text-muted-foreground dark:text-zinc-500">{action.desc}</p>
                     </div>
-                    <ChevronRight className="h-4 w-4 text-zinc-600 group-hover:text-zinc-400 shrink-0 transition-colors" />
+                    <ChevronRight className="h-4 w-4 text-zinc-600 group-hover:text-muted-foreground dark:text-zinc-400 shrink-0 transition-colors" />
                   </a>
                 ))}
               </div>
@@ -198,20 +198,20 @@ export default async function WorkspaceDashboardPage({
 
           {/* Activity Feed */}
           <div className="lg:col-span-2">
-            <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/60 overflow-hidden backdrop-blur-sm h-full">
-              <div className="px-6 py-4 border-b border-zinc-800/60">
+            <div className="rounded-2xl border border-border dark:border-border dark:border-zinc-800/80 bg-card dark:bg-card dark:bg-zinc-900/60 overflow-hidden backdrop-blur-sm h-full">
+              <div className="px-6 py-4 border-b border-border dark:border-border dark:border-zinc-800/60">
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4 text-blue-400" />
-                  <h2 className="text-sm font-semibold text-white">Recent Activity</h2>
+                  <h2 className="text-sm font-semibold text-foreground dark:text-white">Recent Activity</h2>
                 </div>
               </div>
               <div className="p-6">
                 {stats.recentActivity.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <div className="h-14 w-14 rounded-full bg-zinc-800 flex items-center justify-center mb-4">
+                    <div className="h-14 w-14 rounded-full bg-muted dark:bg-zinc-800 flex items-center justify-center mb-4">
                       <Clock className="h-6 w-6 text-zinc-600" />
                     </div>
-                    <p className="text-sm font-medium text-zinc-400">No activity yet</p>
+                    <p className="text-sm font-medium text-muted-foreground dark:text-zinc-400">No activity yet</p>
                     <p className="text-xs text-zinc-600 mt-1 max-w-xs">
                       Activity from your team will appear here as you start collaborating.
                     </p>
@@ -220,12 +220,12 @@ export default async function WorkspaceDashboardPage({
                   <div className="space-y-5">
                     {stats.recentActivity.map((log) => (
                       <div key={log.id} className="flex items-start gap-3">
-                        <div className="h-7 w-7 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-semibold shrink-0 mt-0.5">
+                        <div className="h-7 w-7 rounded-full bg-muted dark:bg-zinc-800 flex items-center justify-center text-xs font-semibold shrink-0 mt-0.5">
                           {log.user?.name?.charAt(0).toUpperCase() || "?"}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm text-zinc-300">
-                            <span className="font-medium text-white">{log.user?.name}</span>{" "}
+                          <p className="text-sm text-foreground dark:text-zinc-300">
+                            <span className="font-medium text-foreground dark:text-white">{log.user?.name}</span>{" "}
                             {log.action.toLowerCase()} a {log.entityType.toLowerCase()}
                           </p>
                           <p className="text-xs text-zinc-600 mt-0.5">
@@ -246,13 +246,13 @@ export default async function WorkspaceDashboardPage({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
           {/* Recent Notes */}
-          <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/60 overflow-hidden backdrop-blur-sm">
-            <div className="px-6 py-4 border-b border-zinc-800/60 flex items-center justify-between">
+          <div className="rounded-2xl border border-border dark:border-border dark:border-zinc-800/80 bg-card dark:bg-card dark:bg-zinc-900/60 overflow-hidden backdrop-blur-sm">
+            <div className="px-6 py-4 border-b border-border dark:border-border dark:border-zinc-800/60 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <FileText className="h-4 w-4 text-violet-400" />
-                <h2 className="text-sm font-semibold text-white">Recent Notes</h2>
+                <h2 className="text-sm font-semibold text-foreground dark:text-white">Recent Notes</h2>
               </div>
-              <Link href={`/workspace/${slug}/notes`} className="text-xs text-zinc-500 hover:text-violet-400 transition-colors">
+              <Link href={`/workspace/${slug}/notes`} className="text-xs text-muted-foreground dark:text-zinc-500 hover:text-violet-400 transition-colors">
                 View all →
               </Link>
             </div>
@@ -260,7 +260,7 @@ export default async function WorkspaceDashboardPage({
               {stats.recentNotes.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-10 text-center">
                   <FileText className="h-8 w-8 text-zinc-700 mb-3" />
-                  <p className="text-sm text-zinc-500">No notes yet</p>
+                  <p className="text-sm text-muted-foreground dark:text-zinc-500">No notes yet</p>
                   <Link href={`/workspace/${slug}/notes`} className="text-xs text-violet-400 hover:underline mt-1">
                     Create your first note
                   </Link>
@@ -271,18 +271,18 @@ export default async function WorkspaceDashboardPage({
                     <Link
                       key={note.id}
                       href={`/workspace/${slug}/notes/${note.id}`}
-                      className="group flex items-center gap-3 rounded-xl px-3 py-3 hover:bg-zinc-800/60 transition-colors"
+                      className="group flex items-center gap-3 rounded-xl px-3 py-3 hover:bg-muted dark:bg-muted dark:bg-zinc-800/60 transition-colors"
                     >
                       <div className="h-8 w-8 rounded-lg bg-violet-500/10 flex items-center justify-center shrink-0">
                         <FileText className="h-4 w-4 text-violet-400" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-zinc-200 group-hover:text-white truncate">{note.title || "Untitled"}</p>
+                        <p className="text-sm font-medium text-foreground dark:text-zinc-200 group-hover:text-foreground dark:text-white truncate">{note.title || "Untitled"}</p>
                         <p className="text-xs text-zinc-600">
                           by {note.author?.name} · {new Date(note.updatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                         </p>
                       </div>
-                      <ChevronRight className="h-4 w-4 text-zinc-700 group-hover:text-zinc-400 shrink-0 transition-colors" />
+                      <ChevronRight className="h-4 w-4 text-zinc-700 group-hover:text-muted-foreground dark:text-zinc-400 shrink-0 transition-colors" />
                     </Link>
                   ))}
                 </div>
@@ -291,13 +291,13 @@ export default async function WorkspaceDashboardPage({
           </div>
 
           {/* My Open Tasks */}
-          <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/60 overflow-hidden backdrop-blur-sm">
-            <div className="px-6 py-4 border-b border-zinc-800/60 flex items-center justify-between">
+          <div className="rounded-2xl border border-border dark:border-border dark:border-zinc-800/80 bg-card dark:bg-card dark:bg-zinc-900/60 overflow-hidden backdrop-blur-sm">
+            <div className="px-6 py-4 border-b border-border dark:border-border dark:border-zinc-800/60 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <ListTodo className="h-4 w-4 text-emerald-400" />
-                <h2 className="text-sm font-semibold text-white">My Open Tasks</h2>
+                <h2 className="text-sm font-semibold text-foreground dark:text-white">My Open Tasks</h2>
               </div>
-              <Link href={`/workspace/${slug}/projects`} className="text-xs text-zinc-500 hover:text-emerald-400 transition-colors">
+              <Link href={`/workspace/${slug}/projects`} className="text-xs text-muted-foreground dark:text-zinc-500 hover:text-emerald-400 transition-colors">
                 View all →
               </Link>
             </div>
@@ -305,7 +305,7 @@ export default async function WorkspaceDashboardPage({
               {stats.myOpenTasks.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-10 text-center">
                   <ListTodo className="h-8 w-8 text-zinc-700 mb-3" />
-                  <p className="text-sm text-zinc-500">No open tasks assigned to you</p>
+                  <p className="text-sm text-muted-foreground dark:text-zinc-500">No open tasks assigned to you</p>
                   <p className="text-xs text-zinc-600 mt-1">You&apos;re all caught up! 🎉</p>
                 </div>
               ) : (
@@ -314,14 +314,14 @@ export default async function WorkspaceDashboardPage({
                     <Link
                       key={task.id}
                       href={`/workspace/${slug}/projects/${task.project.id}`}
-                      className="group flex items-center gap-3 rounded-xl px-3 py-3 hover:bg-zinc-800/60 transition-colors"
+                      className="group flex items-center gap-3 rounded-xl px-3 py-3 hover:bg-muted dark:bg-muted dark:bg-zinc-800/60 transition-colors"
                     >
                       <div className={`h-2 w-2 rounded-full shrink-0 ${statusColors[task.status] || "bg-zinc-600"}`} />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-zinc-200 group-hover:text-white truncate">{task.title}</p>
+                        <p className="text-sm font-medium text-foreground dark:text-zinc-200 group-hover:text-foreground dark:text-white truncate">{task.title}</p>
                         <p className="text-xs text-zinc-600">{task.project.name}</p>
                       </div>
-                      <span className={`text-xs font-medium shrink-0 ${priorityColors[task.priority] || "text-zinc-500"}`}>
+                      <span className={`text-xs font-medium shrink-0 ${priorityColors[task.priority] || "text-muted-foreground dark:text-zinc-500"}`}>
                         {task.priority}
                       </span>
                     </Link>
@@ -335,21 +335,21 @@ export default async function WorkspaceDashboardPage({
         {/* Getting Started Checklist */}
         {stats.taskCount === 0 && stats.memberCount < 2 && (
           <div className="rounded-2xl border border-violet-500/20 bg-gradient-to-br from-violet-950/40 to-blue-950/20 p-6 backdrop-blur-sm">
-            <h2 className="text-base font-semibold text-white mb-1">🚀 Get started with DevSync AI</h2>
-            <p className="text-sm text-zinc-400 mb-5">Complete these steps to set up your workspace</p>
+            <h2 className="text-base font-semibold text-foreground dark:text-white mb-1">🚀 Get started with DevSync AI</h2>
+            <p className="text-sm text-muted-foreground dark:text-zinc-400 mb-5">Complete these steps to set up your workspace</p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
                 { done: true, label: "Create a workspace", desc: "You're here! ✅" },
                 { done: stats.memberCount >= 2, label: "Invite a teammate", desc: "Collaborate together" },
                 { done: stats.taskCount > 0, label: "Create your first task", desc: "Start tracking work" },
               ].map((step) => (
-                <div key={step.label} className={`flex items-start gap-3 p-4 rounded-xl border ${step.done ? "border-emerald-500/30 bg-emerald-500/5" : "border-zinc-700/50 bg-zinc-800/30"}`}>
+                <div key={step.label} className={`flex items-start gap-3 p-4 rounded-xl border ${step.done ? "border-emerald-500/30 bg-emerald-500/5" : "border-zinc-700/50 bg-muted dark:bg-zinc-800/30"}`}>
                   <div className={`h-5 w-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${step.done ? "bg-emerald-500" : "border-2 border-zinc-600"}`}>
-                    {step.done && <span className="text-white text-[10px]">✓</span>}
+                    {step.done && <span className="text-foreground dark:text-white text-[10px]">✓</span>}
                   </div>
                   <div>
-                    <p className={`text-sm font-medium ${step.done ? "text-emerald-400" : "text-zinc-300"}`}>{step.label}</p>
-                    <p className="text-xs text-zinc-500 mt-0.5">{step.desc}</p>
+                    <p className={`text-sm font-medium ${step.done ? "text-emerald-400" : "text-foreground dark:text-zinc-300"}`}>{step.label}</p>
+                    <p className="text-xs text-muted-foreground dark:text-zinc-500 mt-0.5">{step.desc}</p>
                   </div>
                 </div>
               ))}

@@ -11,10 +11,10 @@ export default async function InvitePage({
 
   if (!token) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
-        <div className="text-center p-8 rounded-xl bg-zinc-900 border border-zinc-800">
+      <div className="flex min-h-screen items-center justify-center bg-background dark:bg-zinc-950 text-foreground dark:text-white">
+        <div className="text-center p-8 rounded-xl bg-card dark:bg-zinc-900 border border-border dark:border-zinc-800">
           <h1 className="text-2xl font-bold text-red-500 mb-2">Invalid Invite Link</h1>
-          <p className="text-zinc-400">This invite link is missing or malformed.</p>
+          <p className="text-muted-foreground dark:text-zinc-400">This invite link is missing or malformed.</p>
         </div>
       </div>
     );
@@ -32,10 +32,10 @@ export default async function InvitePage({
     workspaceSlug = await joinWorkspaceByToken(token);
   } catch (error: any) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
-        <div className="text-center p-8 rounded-xl bg-zinc-900 border border-zinc-800">
+      <div className="flex min-h-screen items-center justify-center bg-background dark:bg-zinc-950 text-foreground dark:text-white">
+        <div className="text-center p-8 rounded-xl bg-card dark:bg-zinc-900 border border-border dark:border-zinc-800">
           <h1 className="text-2xl font-bold text-red-500 mb-2">Invite Failed</h1>
-          <p className="text-zinc-400">{error.message || "This invite link is invalid or has expired."}</p>
+          <p className="text-muted-foreground dark:text-zinc-400">{error.message || "This invite link is invalid or has expired."}</p>
         </div>
       </div>
     );
