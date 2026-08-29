@@ -88,7 +88,7 @@ export function NoteEditor({ noteId, token, isReadOnly, currentUser }: NoteEdito
           {saveStatus === "offline" && (
             <>
               <WifiOff className="h-3.5 w-3.5 text-amber-500" />
-              <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">Offline — restart the socket server</span>
+              <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">Reconnecting...</span>
             </>
           )}
         </div>
