@@ -15,7 +15,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Sparkles,
-  Activity
+  Activity,
+  UserPlus
 } from "lucide-react";
 import { UserButton } from "@/components/shared/user-button";
 import { Button } from "@/components/ui/button";
@@ -92,6 +93,19 @@ export function Sidebar({ workspaceSlug, workspaces }: { workspaceSlug: string, 
 
       {/* Bottom: User + Settings + Invite */}
       <div className="p-2 border-t border-zinc-800/60 shrink-0 space-y-2">
+
+        {/* Invite Members */}
+        <Link
+          href={`/workspace/${workspaceSlug}/settings`}
+          className={cn(
+            "flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-medium transition-all duration-150 text-zinc-500 hover:bg-zinc-800/60 hover:text-zinc-200",
+            isCollapsed ? "justify-center" : ""
+          )}
+          title={isCollapsed ? "Invite Members" : undefined}
+        >
+          <UserPlus className={cn("shrink-0 text-violet-400", isCollapsed ? "h-5 w-5" : "h-4 w-4")} />
+          {!isCollapsed && <span>Invite Members</span>}
+        </Link>
 
         <div className={cn("flex items-center gap-2", isCollapsed ? "justify-center" : "")}>
           <UserButton />

@@ -1,20 +1,23 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import { 
-  MessageSquare, 
-  CheckSquare, 
-  Bot, 
+import Link from "next/link";
+import {
+  MessageSquare,
+  CheckSquare,
+  Bot,
   Users,
   TrendingUp,
   Clock,
   Zap,
   ChevronRight,
-  Circle
+  Circle,
+  FileText,
+  ListTodo,
 } from "lucide-react";
 
 async function getWorkspaceStats(workspaceId: string, userId: string) {
-  const [memberCount, taskCount, tasksDone, aiConversations, recentActivity] = await Promise.all([
+  const [memberCount, taskCount, tasksDone, aiConversations, recentActivity, recentNotes, myOpenTasks] = await Promise.all([
     prisma.workspaceMember.count({ where: { workspaceId } }),
     prisma.task.count({ where: { project: { workspaceId } } }),
     prisma.task.count({ where: { project: { workspaceId }, status: "DONE" } }),
@@ -25,8 +28,24 @@ async function getWorkspaceStats(workspaceId: string, userId: string) {
       take: 6,
       include: { user: { select: { name: true, image: true } } },
     }),
+    prisma.note.findMany({
+      where: { workspaceId },
+      orderBy: { updatedAt: "desc" },
+      take: 4,
+      select: { id: true, title: true, updatedAt: true, author: { select: { name: true } } },
+    }),
+    prisma.task.findMany({
+      where: {
+        project: { workspaceId },
+        assigneeId: userId,
+        status: { not: "DONE" },
+      },
+      orderBy: { updatedAt: "desc" },
+      take: 5,
+      select: { id: true, title: true, status: true, priority: true, project: { select: { id: true, name: true } } },
+    }),
   ]);
-  return { memberCount, taskCount, tasksDone, aiConversations, recentActivity };
+  return { memberCount, taskCount, tasksDone, aiConversations, recentActivity, recentNotes, myOpenTasks };
 }
 
 export default async function WorkspaceDashboardPage({
@@ -46,7 +65,7 @@ export default async function WorkspaceDashboardPage({
 
   if (!workspace) redirect("/dashboard");
 
-  const stats = await getWorkspaceStats(workspace.id, session.user.id);
+  const stats = await getWorkspaceStats(workspace.id, session.user.id!);
   const taskCompletionRate = stats.taskCount > 0
     ? Math.round((stats.tasksDone / stats.taskCount) * 100)
     : 0;
@@ -60,10 +79,24 @@ export default async function WorkspaceDashboardPage({
 
   const quickActions = [
     { label: "Start a Chat", href: `/workspace/${slug}/chat`, icon: MessageSquare, desc: "Message your team" },
-    { label: "Create a Task", href: `/workspace/${slug}/tasks`, icon: CheckSquare, desc: "Track your work" },
+    { label: "Create a Task", href: `/workspace/${slug}/projects`, icon: CheckSquare, desc: "Track your work" },
     { label: "Ask AI", href: `/workspace/${slug}/ai`, icon: Bot, desc: "Get instant help" },
     { label: "Invite Members", href: `/workspace/${slug}/settings`, icon: Users, desc: "Grow your team" },
   ];
+
+  const statusColors: Record<string, string> = {
+    TODO: "bg-zinc-600",
+    IN_PROGRESS: "bg-blue-500",
+    IN_REVIEW: "bg-amber-500",
+    DONE: "bg-emerald-500",
+  };
+
+  const priorityColors: Record<string, string> = {
+    LOW: "text-zinc-500",
+    MEDIUM: "text-amber-400",
+    HIGH: "text-orange-400",
+    URGENT: "text-red-400",
+  };
 
   return (
     <div className="min-h-full bg-zinc-950 text-zinc-100">
@@ -81,7 +114,7 @@ export default async function WorkspaceDashboardPage({
                 {workspace.name}
               </h1>
               <p className="text-zinc-400 mt-2 text-sm">
-                Welcome back, {session.user.name?.split(" ")[0]} 👋 — Here's what's happening today.
+                Welcome back, {session.user.name?.split(" ")[0]} 👋 — Here&apos;s what&apos;s happening today.
               </p>
             </div>
             <div className="flex -space-x-2">
@@ -209,6 +242,96 @@ export default async function WorkspaceDashboardPage({
           </div>
         </div>
 
+        {/* ── NEW: Recent Notes + My Open Tasks ───────────────────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          {/* Recent Notes */}
+          <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/60 overflow-hidden backdrop-blur-sm">
+            <div className="px-6 py-4 border-b border-zinc-800/60 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-violet-400" />
+                <h2 className="text-sm font-semibold text-white">Recent Notes</h2>
+              </div>
+              <Link href={`/workspace/${slug}/notes`} className="text-xs text-zinc-500 hover:text-violet-400 transition-colors">
+                View all →
+              </Link>
+            </div>
+            <div className="p-3">
+              {stats.recentNotes.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-10 text-center">
+                  <FileText className="h-8 w-8 text-zinc-700 mb-3" />
+                  <p className="text-sm text-zinc-500">No notes yet</p>
+                  <Link href={`/workspace/${slug}/notes`} className="text-xs text-violet-400 hover:underline mt-1">
+                    Create your first note
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  {stats.recentNotes.map((note) => (
+                    <Link
+                      key={note.id}
+                      href={`/workspace/${slug}/notes/${note.id}`}
+                      className="group flex items-center gap-3 rounded-xl px-3 py-3 hover:bg-zinc-800/60 transition-colors"
+                    >
+                      <div className="h-8 w-8 rounded-lg bg-violet-500/10 flex items-center justify-center shrink-0">
+                        <FileText className="h-4 w-4 text-violet-400" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-zinc-200 group-hover:text-white truncate">{note.title || "Untitled"}</p>
+                        <p className="text-xs text-zinc-600">
+                          by {note.author?.name} · {new Date(note.updatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                        </p>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-zinc-700 group-hover:text-zinc-400 shrink-0 transition-colors" />
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* My Open Tasks */}
+          <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/60 overflow-hidden backdrop-blur-sm">
+            <div className="px-6 py-4 border-b border-zinc-800/60 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <ListTodo className="h-4 w-4 text-emerald-400" />
+                <h2 className="text-sm font-semibold text-white">My Open Tasks</h2>
+              </div>
+              <Link href={`/workspace/${slug}/projects`} className="text-xs text-zinc-500 hover:text-emerald-400 transition-colors">
+                View all →
+              </Link>
+            </div>
+            <div className="p-3">
+              {stats.myOpenTasks.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-10 text-center">
+                  <ListTodo className="h-8 w-8 text-zinc-700 mb-3" />
+                  <p className="text-sm text-zinc-500">No open tasks assigned to you</p>
+                  <p className="text-xs text-zinc-600 mt-1">You&apos;re all caught up! 🎉</p>
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  {stats.myOpenTasks.map((task) => (
+                    <Link
+                      key={task.id}
+                      href={`/workspace/${slug}/projects/${task.project.id}`}
+                      className="group flex items-center gap-3 rounded-xl px-3 py-3 hover:bg-zinc-800/60 transition-colors"
+                    >
+                      <div className={`h-2 w-2 rounded-full shrink-0 ${statusColors[task.status] || "bg-zinc-600"}`} />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-zinc-200 group-hover:text-white truncate">{task.title}</p>
+                        <p className="text-xs text-zinc-600">{task.project.name}</p>
+                      </div>
+                      <span className={`text-xs font-medium shrink-0 ${priorityColors[task.priority] || "text-zinc-500"}`}>
+                        {task.priority}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
         {/* Getting Started Checklist */}
         {stats.taskCount === 0 && stats.memberCount < 2 && (
           <div className="rounded-2xl border border-violet-500/20 bg-gradient-to-br from-violet-950/40 to-blue-950/20 p-6 backdrop-blur-sm">
@@ -217,8 +340,8 @@ export default async function WorkspaceDashboardPage({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
                 { done: true, label: "Create a workspace", desc: "You're here! ✅" },
-                { done: false, label: "Invite a teammate", desc: "Collaborate together" },
-                { done: false, label: "Create your first task", desc: "Start tracking work" },
+                { done: stats.memberCount >= 2, label: "Invite a teammate", desc: "Collaborate together" },
+                { done: stats.taskCount > 0, label: "Create your first task", desc: "Start tracking work" },
               ].map((step) => (
                 <div key={step.label} className={`flex items-start gap-3 p-4 rounded-xl border ${step.done ? "border-emerald-500/30 bg-emerald-500/5" : "border-zinc-700/50 bg-zinc-800/30"}`}>
                   <div className={`h-5 w-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${step.done ? "bg-emerald-500" : "border-2 border-zinc-600"}`}>
@@ -237,3 +360,4 @@ export default async function WorkspaceDashboardPage({
     </div>
   );
 }
+
