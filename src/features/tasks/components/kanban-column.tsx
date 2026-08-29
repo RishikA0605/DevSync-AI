@@ -23,7 +23,7 @@ export function KanbanColumn({ status, tasks, onTaskClick, onAddTask }: Props) {
   const meta = COLUMN_META[status] || { label: status, color: "text-muted-foreground dark:text-zinc-400", dot: "bg-zinc-500" };
 
   return (
-    <div className="flex flex-col min-w-[280px] w-[280px]">
+    <div className="flex flex-col min-w-[280px] w-[280px] snap-center">
       {/* Column Header */}
       <div className="flex items-center gap-2 px-1 mb-3">
         <div className={cn("h-2 w-2 rounded-full shrink-0", meta.dot)} />

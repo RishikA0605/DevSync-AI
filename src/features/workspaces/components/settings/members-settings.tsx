@@ -104,8 +104,8 @@ export function MembersSettings({ workspace, currentMember, members }: { workspa
           </PermissionGuard>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border border-border dark:border-border dark:border-zinc-800/60 overflow-hidden">
-            <div className="divide-y divide-zinc-800/60">
+          <div className="rounded-md border border-border dark:border-border dark:border-zinc-800/60 overflow-hidden overflow-x-auto">
+            <div className="divide-y divide-zinc-800/60 min-w-[500px]">
               {members.map((m) => {
                 const isYou = m.userId === currentMember.userId;
                 const isTargetOwner = m.role === "OWNER";

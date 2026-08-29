@@ -7,6 +7,8 @@ import {
 import { prisma } from "@/lib/prisma";
 import { ChatSidebar } from "@/features/chat/components/chat-sidebar";
 
+import { MobileChatSidebar } from "@/features/chat/components/mobile-chat-sidebar";
+
 interface Props {
   children: React.ReactNode;
   params: Promise<{ slug: string }>;
@@ -43,15 +45,25 @@ export default async function ChatLayout({ children, params }: Props) {
   );
 
   return (
-    <div className="flex h-full">
-      <ChatSidebar
-        channels={channels}
-        workspaceId={workspace.id}
-        workspaceSlug={workspace.slug}
-        unreadCounts={unreadMap}
-        onlineUserIds={[]}
-      />
-      <main className="flex-1 overflow-hidden">{children}</main>
+    <div className="flex h-[100dvh] relative">
+      <div className="hidden md:flex shrink-0 border-r border-border dark:border-zinc-800/60">
+        <ChatSidebar
+          channels={channels}
+          workspaceId={workspace.id}
+          workspaceSlug={workspace.slug}
+          unreadCounts={unreadMap}
+          onlineUserIds={[]}
+        />
+      </div>
+      <main className="flex-1 flex flex-col w-full min-w-0 overflow-hidden">
+        <MobileChatSidebar 
+          channels={channels}
+          workspaceId={workspace.id}
+          workspaceSlug={workspace.slug}
+          unreadCounts={unreadMap}
+        />
+        {children}
+      </main>
     </div>
   );
 }

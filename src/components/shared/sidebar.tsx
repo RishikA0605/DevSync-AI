@@ -35,29 +35,44 @@ const sidebarNav = [
   { title: "AI Assistant", href: "/ai", icon: Bot },
 ];
 
-export function Sidebar({ workspaceSlug, workspaces }: { workspaceSlug: string, workspaces: Workspace[] }) {
+export function Sidebar({ 
+  workspaceSlug, 
+  workspaces,
+  isMobile,
+  onNavigate
+}: { 
+  workspaceSlug: string, 
+  workspaces: Workspace[],
+  isMobile?: boolean,
+  onNavigate?: () => void
+}) {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  // Force expanded state on mobile
+  const collapsed = isMobile ? false : isCollapsed;
 
   return (
     <div
       className={cn(
-        "relative flex flex-col bg-card dark:bg-zinc-950 border-r border-border dark:border-zinc-800/60 transition-all duration-300 ease-in-out",
-        isCollapsed ? "w-[60px]" : "w-[220px]"
+        "relative flex flex-col bg-card dark:bg-zinc-950 border-r border-border dark:border-zinc-800/60 transition-all duration-300 ease-in-out h-full",
+        isMobile ? "w-full border-r-0" : (collapsed ? "w-[60px]" : "w-[220px]")
       )}
     >
       {/* Logo / Workspace Header */}
       <div className="flex h-14 items-center px-2 border-b border-border dark:border-border dark:border-zinc-800/60 shrink-0">
-        <WorkspaceSwitcher workspaces={workspaces} activeSlug={workspaceSlug} isCollapsed={isCollapsed} />
+        <WorkspaceSwitcher workspaces={workspaces} activeSlug={workspaceSlug} isCollapsed={collapsed} />
 
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-7 w-7 shrink-0 text-zinc-600 hover:text-foreground dark:text-zinc-300 hover:bg-muted dark:bg-zinc-800"
-          onClick={() => setIsCollapsed(!isCollapsed)}
-        >
-          {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
-        </Button>
+        {!isMobile && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 shrink-0 text-zinc-600 hover:text-foreground dark:text-zinc-300 hover:bg-muted dark:bg-zinc-800"
+            onClick={() => setIsCollapsed(!collapsed)}
+          >
+            {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+          </Button>
+        )}
       </div>
 
       {/* Navigation */}
@@ -69,22 +84,23 @@ export function Sidebar({ workspaceSlug, workspaces }: { workspaceSlug: string, 
             <Link
               key={item.href}
               href={href}
-              title={isCollapsed ? item.title : undefined}
+              title={collapsed ? item.title : undefined}
               className={cn(
                 "group flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm font-medium transition-all duration-150",
-                isCollapsed ? "justify-center" : "",
+                collapsed ? "justify-center" : "",
                 isActive
                   ? "bg-muted dark:bg-zinc-800 text-foreground dark:text-white"
                   : "text-muted-foreground dark:text-zinc-500 hover:bg-muted dark:bg-muted dark:bg-zinc-800/60 hover:text-foreground dark:text-zinc-200"
               )}
+              onClick={onNavigate}
             >
               <item.icon className={cn(
                 "shrink-0 transition-colors",
-                isCollapsed ? "h-5 w-5" : "h-4 w-4",
+                collapsed ? "h-5 w-5" : "h-4 w-4",
                 isActive ? "text-violet-400" : "text-muted-foreground dark:text-zinc-500 group-hover:text-foreground dark:text-zinc-300"
               )} />
-              {!isCollapsed && <span>{item.title}</span>}
-              {!isCollapsed && isActive && (
+              {!collapsed && <span>{item.title}</span>}
+              {!collapsed && isActive && (
                 <div className="ml-auto h-1.5 w-1.5 rounded-full bg-violet-400" />
               )}
             </Link>
@@ -97,34 +113,43 @@ export function Sidebar({ workspaceSlug, workspaces }: { workspaceSlug: string, 
 
         {/* Invite Members */}
         <Link
+          href={`/workspace/${workspaceSlug}/settings?tab=members`}
+          className={cn(
+            "flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground dark:text-zinc-500 hover:bg-muted dark:bg-zinc-800 hover:text-foreground dark:text-zinc-200 transition-colors",
+            collapsed ? "justify-center" : ""
+          )}
+          onClick={onNavigate}
+          title={collapsed ? "Invite Members" : undefined}
+        >
+          <UserPlus className={cn("shrink-0 text-violet-400", collapsed ? "h-5 w-5" : "h-4 w-4")} />
+          {!collapsed && <span>Invite Members</span>}
+        </Link>
+        
+        {/* Settings */}
+        <Link
           href={`/workspace/${workspaceSlug}/settings`}
           className={cn(
-            "flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-medium transition-all duration-150 text-muted-foreground dark:text-zinc-500 hover:bg-muted dark:bg-muted dark:bg-zinc-800/60 hover:text-foreground dark:text-zinc-200",
-            isCollapsed ? "justify-center" : ""
+            "flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground dark:text-zinc-500 hover:bg-muted dark:bg-zinc-800 hover:text-foreground dark:text-zinc-200 transition-colors",
+            collapsed ? "justify-center" : ""
           )}
-          title={isCollapsed ? "Invite Members" : undefined}
+          onClick={onNavigate}
+          title={collapsed ? "Settings" : undefined}
         >
-          <UserPlus className={cn("shrink-0 text-violet-400", isCollapsed ? "h-5 w-5" : "h-4 w-4")} />
-          {!isCollapsed && <span>Invite Members</span>}
+          <Settings className={cn("shrink-0", collapsed ? "h-5 w-5" : "h-4 w-4")} />
+          {!collapsed && <span>Workspace Settings</span>}
         </Link>
 
         {/* Theme Toggle */}
-        <ThemeToggle isCollapsed={isCollapsed} />
+        <ThemeToggle isCollapsed={collapsed} />
 
-        <div className={cn("flex items-center gap-2", isCollapsed ? "justify-center" : "")}>
+        <div className={cn("flex items-center gap-2", collapsed ? "justify-center" : "")}>
           <UserButton />
-          {!isCollapsed && (
+          {!collapsed && (
             <div className="flex-1 min-w-0" />
           )}
-          {!isCollapsed && (
+          {!collapsed && (
             <div className="flex items-center gap-1">
               <NotificationBell />
-              <Link
-                href={`/workspace/${workspaceSlug}/settings`}
-                className="p-1.5 rounded-lg text-zinc-600 hover:text-foreground dark:text-zinc-300 hover:bg-muted dark:bg-zinc-800 transition-colors"
-              >
-                <Settings size={15} />
-              </Link>
             </div>
           )}
         </div>

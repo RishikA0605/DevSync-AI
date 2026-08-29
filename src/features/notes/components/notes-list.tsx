@@ -81,20 +81,20 @@ export function NotesList({ notes, workspaceSlug }: NotesListProps) {
 
   return (
     <div className="flex flex-col h-full bg-slate-50/50 dark:bg-background dark:bg-zinc-950/50">
-      <div className="p-6 pb-4 border-b flex justify-between items-center bg-white dark:bg-card dark:bg-zinc-900 sticky top-0 z-10">
+      <div className="p-4 md:p-6 pb-4 border-b flex justify-between items-center bg-white dark:bg-card dark:bg-zinc-900 sticky top-0 z-10">
         <div>
-          <h1 className="text-2xl font-bold text-black">Notes</h1>
+          <h1 className="text-2xl font-bold text-foreground">Notes</h1>
           <p className="text-muted-foreground text-sm mt-1">
             Collaborative documents for your workspace
           </p>
         </div>
         <Button onClick={() => setIsCreateModalOpen(true)} className="gap-2 shadow-sm rounded-full">
           <Plus className="h-4 w-4" />
-          New Note
+          <span className="hidden sm:inline">New Note</span>
         </Button>
       </div>
 
-      <div className="p-6 flex-1 max-w-7xl mx-auto w-full">
+      <div className="p-4 md:p-6 flex-1 max-w-7xl mx-auto w-full">
         <div className="relative mb-6">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
